@@ -1,11 +1,20 @@
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect
-
+from django.shortcuts import render, redirect,HttpResponse, HttpResponseRedirect
+from django.contrib.sites.shortcuts import get_current_site
+from verify_email.email_handler import send_verification_email
 # Create your views here.
 from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.template import loader
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from .tokens import account_activation_token
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
+from .forms import NewUserForm
 
 from user.forms import NewUserForm
 
@@ -47,14 +56,66 @@ def login_view(request):
     form = AuthenticationForm()
     return render(request=request, template_name="user/login.html", context={"login_form": form})
 
+# def register_view(request):
+#     if request.method == "POST":
+#         form = NewUserForm(request.POST)
+#         if form.is_valid():
+#             user = form.save(commit=False)
+#             user.is_active=False
+#             user.save( )
+#             login(request, user)
+#             messages.success(request, "Registration successful.")
+#             return redirect("user:index")
+#         messages.error(request, "Unsuccessful registration. Invalid information.")
+#     form = NewUserForm()
+#     return render(request=request, template_name="user/register.html", context={"register_form": form})
+
 def register_view(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            messages.success(request, "Registration successful.")
-            return redirect("user:index")  # degil
-        messages.error(request, "Unsuccessful registration. Invalid information.")
-    form = NewUserForm()
+            # save form in the memory not in database
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            # to get the domain of the current site
+            current_site = get_current_site(request)
+            mail_subject = 'Activation link has been sent to your email id'
+            message = render_to_string('user/acc_active_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'token':account_activation_token.make_token(user),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                        mail_subject, message, to=[to_email]
+            )
+            email.send()
+            return render(request, 'user/Email.html',{'msg':'Please confirm your email address to complete the registration'})
+    else:
+        from django.urls import reverse
+        #print(reverse('user:activate', kwargs={'uidb64':'x', 'token': 'xddd'}))
+        #print(reverse('user:index'))
+        form = NewUserForm()
     return render(request=request, template_name="user/register.html", context={"register_form": form})
+
+
+def activate(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return render(request,'user/Email.html',{'msg':'Thank you for your email confirmation. Now you can login your account.'})
+    else:
+        return render(request, 'user/Email.html',{'msg':'Activation link is invalid!'})
+
+
+
+
+

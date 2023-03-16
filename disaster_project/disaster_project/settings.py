@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'user.apps.UserConfig',
     'crispy_forms',
     "crispy_bootstrap5",
-    "djongo"
+    "djongo",
+    "user",
 ]
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
@@ -139,3 +139,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'user.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "meltem98meltem@gmail.com"
+EMAIL_HOST_PASSWORD = "zewsiqsxehsubmsk"
+
