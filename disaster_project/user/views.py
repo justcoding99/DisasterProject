@@ -4,7 +4,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect,HttpResponse, HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
-from verify_email.email_handler import send_verification_email
 # Create your views here.
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -95,8 +94,6 @@ def register_view(request):
             return render(request, 'user/Email.html',{'msg':'Please confirm your email address to complete the registration'})
     else:
         from django.urls import reverse
-        #print(reverse('user:activate', kwargs={'uidb64':'x', 'token': 'xddd'}))
-        #print(reverse('user:index'))
         form = NewUserForm()
     return render(request=request, template_name="user/register.html", context={"register_form": form})
 

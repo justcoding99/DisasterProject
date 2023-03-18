@@ -1,3 +1,5 @@
 env
 db
 .idea
+.env
+disaster_project/.env
