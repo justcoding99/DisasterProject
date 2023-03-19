@@ -47,7 +47,6 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -150,3 +149,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
 
+DEVELOPMENT = os.environ.get("DEVELOPMENT", 'False')

@@ -1,0 +1,47 @@
+{% extends "./base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <style>
+        #map { height: 180px; }
+
+    </style>
+
+
+ <div class="content-section col-md-8 col-md-offset-2">
+
+     {% csrf_token %}
+     {{ help_need_form|crispy }}
+    <div id="demo">
+
+    </div>
+ <button onclick="getLocation()">Try It</button>
+  <div id="map"></div>
+
+
+
+</div>
+    <script>
+    var x = document.getElementById("demo");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude +
+  "<br>Longitude: " + position.coords.longitude;
+  let lat = position.coords.latitude;
+  let lon = position.coords.longitude;
+    const map = L.map('map').setView([lat, lon], 13);
+    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+}
+
+    </script>
+{% endblock content %}

@@ -1,7 +1,11 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
+
+from .models import HelpNeed
+
 User = get_user_model()
+
 
 # Create your forms here.
 class NewUserForm(UserCreationForm):
@@ -17,3 +21,11 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class HelpNeedForm(forms.ModelForm):
+    name = forms.CharField(required=True)
+
+    class Meta:
+        model = HelpNeed
+        fields = ("name", "phone", "address")

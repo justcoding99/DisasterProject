@@ -1,8 +1,8 @@
-{% extends "./index.html" %}
+{% extends "./base.html" %}
 {% load crispy_forms_tags %}
-{% block start %}
+{% block content %}
  <div class="content-section col-md-8 col-md-offset-2">
 	<h2>{{msg}}</h2>
 	<a href="{% url 'login' %}" target="_blank" rel="noopener noreferrer">Login</a>
 </div>
-{% endblock start %}
+{% endblock content %}

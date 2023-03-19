@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
@@ -13,13 +14,11 @@ from django.utils.encoding import force_bytes, force_str
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm
-
-from user.forms import NewUserForm
+from .forms import NewUserForm, HelpNeedForm
 
 
 def index(request):
-    template = loader.get_template('user/index.html')
+    template = loader.get_template('user/base.html')
     context = {}
     if not request.user.is_authenticated:
         context['variable'] = "you are not allowed"
@@ -55,19 +54,6 @@ def login_view(request):
     form = AuthenticationForm()
     return render(request=request, template_name="user/login.html", context={"login_form": form})
 
-# def register_view(request):
-#     if request.method == "POST":
-#         form = NewUserForm(request.POST)
-#         if form.is_valid():
-#             user = form.save(commit=False)
-#             user.is_active=False
-#             user.save( )
-#             login(request, user)
-#             messages.success(request, "Registration successful.")
-#             return redirect("user:index")
-#         messages.error(request, "Unsuccessful registration. Invalid information.")
-#     form = NewUserForm()
-#     return render(request=request, template_name="user/register.html", context={"register_form": form})
 
 def register_view(request):
     if request.method == 'POST':
@@ -75,7 +61,8 @@ def register_view(request):
         if form.is_valid():
             # save form in the memory not in database
             user = form.save(commit=False)
-            user.is_active = False
+            if settings.DEVELOPMENT != 'True':
+                user.is_active = False
             user.save()
             # to get the domain of the current site
             current_site = get_current_site(request)
@@ -90,7 +77,8 @@ def register_view(request):
             email = EmailMessage(
                         mail_subject, message, to=[to_email]
             )
-            email.send()
+            if settings.DEVELOPMENT != 'True':
+                email.send()
             return render(request, 'user/Email.html',{'msg':'Please confirm your email address to complete the registration'})
     else:
         from django.urls import reverse
@@ -113,6 +101,20 @@ def activate(request, uidb64, token):
         return render(request, 'user/Email.html',{'msg':'Activation link is invalid!'})
 
 
-
-
-
+def help_need_view(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("user:index")
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    form = HelpNeedForm()
+    return render(request=request, template_name="user/help_need.html", context={"help_need_form": form})
