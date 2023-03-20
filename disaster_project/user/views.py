@@ -119,3 +119,8 @@ def help_need_view(request):
 def help_map(request):
     needs = HelpNeed.objects.all()
     return render(request=request, template_name="user/help_map.html", context={"needs": needs})
+
+
+def help_need_list(request):
+    needs = HelpNeed.objects.all()
+    return render(request=request, template_name="user/help_need_list.html", context={"needs": needs})

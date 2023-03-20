@@ -1,0 +1,20 @@
+{% extends "./base.html" %}
+{% load custom_tags %}
+{% block content %}
+
+    <div class="content-section col-md-8 col-md-offset-2">
+    <div class="list-group">
+         {% for need in needs %}
+  <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+    <div class="d-flex w-100 justify-content-between">
+      <h5 class="mb-1"> {{ need.name }} </h5>
+      <small>{{ need.created_at | prettydate }}</small>
+    </div>
+    <p class="mb-1">{{ need.phone }}</p>
+    <small> {{ need.address }}</small>
+  </a>
+         {% endfor %}
+</div>
+
+    </div>
+{% endblock content %}
