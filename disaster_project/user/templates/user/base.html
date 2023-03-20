@@ -10,13 +10,21 @@
     {% endblock %}
 
     <!-- Bootstrap core CSS -->
-        <link href="{% static 'user/bootstrap.min.css' %}" rel="stylesheet" />
+    <link href="{% static 'user/bootstrap.min.css' %}" rel="stylesheet"/>
 
-    <link href="{% static 'user/leaflet.css' %}" rel="stylesheet" />
+    <link href="{% static 'user/leaflet.css' %}" rel="stylesheet"/>
+    <link href="{% static 'user/marker/MarkerCluster.css' %}" rel="stylesheet"/>
+    <link href="{% static 'user/marker/MarkerCluster.Default.css' %}" rel="stylesheet"/>
 
 
 </head>
 <body>
+
+<script src="{% static 'user/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'user/leaflet.js' %}"></script>
+<script src="{% static 'user/marker/leaflet.markercluster.js' %}"></script>
+
+
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f5f5f5">
     <div class="container-fluid">
         <a class="navbar-brand" href="/">Disaster Recovery Website</a>
@@ -37,6 +45,10 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#">Maps</a>
                 </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/help_map">Help Map</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/help_need">I Need Help</a>
                 </li>
@@ -56,28 +68,38 @@
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
                 {% else %}
-                    <li class="nav-item "><a class="nav-link {% if request.path == '/register' %} active {% endif %}" href="/register">Register</a></li>
-                    <li class="nav-item"><a class="nav-link {% if request.path == '/login' %} active {% endif %}" href="/login">Login</a></li>
+                    <li class="nav-item "><a class="nav-link {% if request.path == '/register' %} active {% endif %}"
+                                             href="/register">Register</a></li>
+                    <li class="nav-item"><a class="nav-link {% if request.path == '/login' %} active {% endif %}"
+                                            href="/login">Login</a></li>
                 {% endif %}
             </ul>
         </div>
 
     </div>
 </nav>
-<script src="{% static 'user/bootstrap.bundle.min.js' %}"></script>
-<script src="{% static 'user/leaflet.js' %}"></script>
 <div class="container mt-5">
-{% block content %}
-    {% if user.is_authenticated %}
-    <li class="nav-item">
-        <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
-    </li>
-    {% else %}
-    <li class="nav-item">
-        <a class="nav-link" href="#">Welcome, Guest</a>
-    </li>
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </ul>
     {% endif %}
-{% endblock content %}
+    {% block content %}
+        {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Welcome, Guest</a>
+            </li>
+        {% endif %}
+    {% endblock content %}
 </div>
 
 </body>

@@ -58,7 +58,6 @@
             {% csrf_token %}
             {{ login_form|crispy }}
             <button class="btn btn-primary" type="submit">Login</button>
-{{request.path}}
         </form>
     </main>
 {% endblock %}

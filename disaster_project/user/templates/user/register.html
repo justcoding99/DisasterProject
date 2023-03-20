@@ -47,7 +47,6 @@
             {% csrf_token %}
             {{ register_form|crispy }}
             <button class="btn btn-primary" type="submit">Register</button>
-            {{ request.path }}
         </form>
     </main>
 

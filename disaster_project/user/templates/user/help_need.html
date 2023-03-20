@@ -1,47 +1,46 @@
 {% extends "./base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <style>
-        #map { height: 180px; }
 
-    </style>
+    <div class="content-section col-md-8 col-md-offset-2">
+        <form method="POST">
+            {% csrf_token %}
+            {{ help_need_form|crispy }}
+            <div id="demo">
 
+            </div>
+            <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
 
- <div class="content-section col-md-8 col-md-offset-2">
+            <button class="btn btn-primary" type="submit" id="submit">Submit</button>
 
-     {% csrf_token %}
-     {{ help_need_form|crispy }}
-    <div id="demo">
+        </form>
 
     </div>
- <button onclick="getLocation()">Try It</button>
-  <div id="map"></div>
-
-
-
-</div>
     <script>
-    var x = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
 
-function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude;
-  let lat = position.coords.latitude;
-  let lon = position.coords.longitude;
-    const map = L.map('map').setView([lat, lon], 13);
-    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-    }).addTo(map);
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
 
-}
+        function showPosition(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+
+            let lat_field = document.getElementById("id_lat");
+            let lon_field = document.getElementById("id_lon");
+            let address_field = document.getElementById("id_address");
+            lat_field.value = lat;
+            lon_field.value = lon;
+
+            fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon)
+                .then((response) => response.json())
+                .then((data) => {
+                    address_field.value = data.display_name;
+                    console.log(data)
+                });
+        }
 
     </script>
 {% endblock content %}
