@@ -145,3 +145,6 @@ def volunteer_view(request):
         else:
             print(form.errors)
     return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form})
+
+def firstaid_view(request):
+    return render(request=request, template_name="user/firstaid.html")
