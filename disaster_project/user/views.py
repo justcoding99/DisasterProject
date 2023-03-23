@@ -11,12 +11,11 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-
-from .models import HelpNeed
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm
+from .forms import NewUserForm, HelpNeedForm, VolunteerForm
+from .models import Volunteer
 
 
 def index(request):
@@ -105,22 +104,36 @@ def activate(request, uidb64, token):
 
 def help_need_view(request):
     if request.method == "POST":
-        form = HelpNeedForm(request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            form.save()
-            messages.info(request, f"Your help request has been received.")
-            return redirect("user:index")
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("user:index")
+            else:
+                messages.error(request, "Invalid username or password.")
         else:
-            messages.error(request, "Name and phone are mandatory.")
+            messages.error(request, "Invalid username or password.")
     form = HelpNeedForm()
     return render(request=request, template_name="user/help_need.html", context={"help_need_form": form})
 
-
-def help_map(request):
-    needs = HelpNeed.objects.all()
-    return render(request=request, template_name="user/help_map.html", context={"needs": needs})
-
-
-def help_need_list(request):
-    needs = HelpNeed.objects.all()
-    return render(request=request, template_name="user/help_need_list.html", context={"needs": needs})
+# --------------- Rawan -------------------
+def volunteer_view(request):
+    form = VolunteerForm(request.POST or None)
+    if request.method == "POST":
+            if form.is_valid():
+                first_name = request.POST['first_name']
+                last_name = request.POST['last_name']
+                phone = request.POST['phone']
+                address = request.POST['address']
+                volunteer_field = request.POST['volunteer_field']
+                vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address = address, volunteer_field = volunteer_field)
+                messages.success(request, 'Data has been submitted')
+                form = VolunteerForm()
+                # form.save()
+            else:
+                print(form.errors)
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form" : form})

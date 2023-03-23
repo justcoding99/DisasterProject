@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+{% extends "user/base.html" %}
+
+<html lang="en">
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+        <title>Volunteer</title>
+    {% endblock %}
+
+    <style>
+
+.jumbotron.jumbotron-fluid{
+    text-align: center;
+    background: none;
+}
+.lead{
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+}
+.submitform{
+    margin: auto;
+    display: block;
+    padding: 10px;
+}
+    </style>
+</head>
+<body>
+{% load crispy_forms_tags %}
+    <div class="section1light">
+         <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron jumbotron-fluid">
+                  <div class="container">
+                    <h1 class="display-4">How To Volunteer </h1>
+                    <p class="lead 1" style="text-align:left">Provide Food</p>
+                    <p class="lead 2" style="text-align:center">Provide Transportation</p>
+                    <p class="lead 3" style="text-align:right">Provide Shelter</p>
+                  </div>
+                </div>
+            </div>
+        </div>
+   </div>
+
+    <form method="POST" action="">
+     {{ volunteer_form|crispy }} {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary submitform" type="submit">Submit Form</button>
+     </form>
+
+
+{% endblock %}
+</body>
+</html>

@@ -1,5 +1,7 @@
 {% extends "user/base.html" %}
-
+{% block title %}
+        <title>Register page</title>
+    {% endblock %}
 {% block content %}
     <style>
         .form-signin {
@@ -47,6 +49,7 @@
             {% csrf_token %}
             {{ register_form|crispy }}
             <button class="btn btn-primary" type="submit">Register</button>
+            {{ request.path }}
         </form>
     </main>
 
