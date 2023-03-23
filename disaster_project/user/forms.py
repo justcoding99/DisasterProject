@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
-from .models import HelpNeed
+from .models import HelpNeed, Volunteer
 
 User = get_user_model()
 
@@ -31,4 +31,16 @@ class HelpNeedForm(forms.ModelForm):
 
     class Meta:
         model = HelpNeed
-        fields = ("name", "phone", "address", "lat", "lon")
+        fields = ("name", "phone", "address")
+
+
+# --------------- Rawan -------------------
+
+class VolunteerForm(forms.ModelForm):
+    first_name = forms.CharField(required=True)
+    last_name = forms.CharField(required=True)
+
+    class Meta:
+        model = Volunteer
+        fields = ("first_name","last_name", "phone", "address", "volunteer_field")
+

@@ -124,3 +124,22 @@ def help_map(request):
 def help_need_list(request):
     needs = HelpNeed.objects.all()
     return render(request=request, template_name="user/help_need_list.html", context={"needs": needs})
+
+
+# --------------- Rawan -------------------
+def volunteer_view(request):
+    form = VolunteerForm(request.POST or None)
+    if request.method == "POST":
+            if form.is_valid():
+                first_name = request.POST['first_name']
+                last_name = request.POST['last_name']
+                phone = request.POST['phone']
+                address = request.POST['address']
+                volunteer_field = request.POST['volunteer_field']
+                vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address = address, volunteer_field = volunteer_field)
+                messages.success(request, 'Data has been submitted')
+                form = VolunteerForm()
+                # form.save()
+            else:
+                print(form.errors)
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form" : form})
