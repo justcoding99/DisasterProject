@@ -31,7 +31,7 @@ class HelpNeedForm(forms.ModelForm):
 
     class Meta:
         model = HelpNeed
-        fields = ("name", "phone", "address")
+        fields = ("name", "phone", "address", "lat", "lon")
 
 
 # --------------- Rawan -------------------
