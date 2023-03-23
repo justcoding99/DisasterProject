@@ -25,6 +25,9 @@ class NewUserForm(UserCreationForm):
 
 class HelpNeedForm(forms.ModelForm):
     name = forms.CharField(required=True)
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=False)
 
     class Meta:
         model = HelpNeed

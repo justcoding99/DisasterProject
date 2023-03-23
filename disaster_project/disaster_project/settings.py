@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'crispy_forms',
     "crispy_bootstrap5",
     "djongo",
@@ -85,8 +86,10 @@ DATABASES = {
         'NAME': 'djongo',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017'
-
+            'host': 'localhost',
+            'port': 27017,
+            'username': 'root',
+            'password': 'example',
         }
     }
 }

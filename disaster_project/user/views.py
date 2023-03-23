@@ -11,11 +11,12 @@ from django.template.loader import render_to_string
 from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
+
+from .models import HelpNeed
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm, VolunteerForm
-from .models import Volunteer
+from .forms import NewUserForm, HelpNeedForm
 
 
 def index(request):
@@ -104,21 +105,26 @@ def activate(request, uidb64, token):
 
 def help_need_view(request):
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = HelpNeedForm(request.POST)
         if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.info(request, f"You are now logged in as {username}.")
-                return redirect("user:index")
-            else:
-                messages.error(request, "Invalid username or password.")
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:index")
         else:
-            messages.error(request, "Invalid username or password.")
+            messages.error(request, "Name and phone are mandatory.")
     form = HelpNeedForm()
     return render(request=request, template_name="user/help_need.html", context={"help_need_form": form})
+
+
+def help_map(request):
+    needs = HelpNeed.objects.all()
+    return render(request=request, template_name="user/help_map.html", context={"needs": needs})
+
+
+def help_need_list(request):
+    needs = HelpNeed.objects.all()
+    return render(request=request, template_name="user/help_need_list.html", context={"needs": needs})
+
 
 # --------------- Rawan -------------------
 def volunteer_view(request):
