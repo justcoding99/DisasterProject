@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render, redirect,HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from django.contrib.sites.shortcuts import get_current_site
 # Create your views here.
 from django.http import HttpResponse
@@ -12,11 +12,11 @@ from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import HelpNeed
+from .models import HelpNeed, Volunteer
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm
+from .forms import NewUserForm, HelpNeedForm, VolunteerForm
 
 
 def index(request):
@@ -72,16 +72,17 @@ def register_view(request):
             message = render_to_string('user/acc_active_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                'token':account_activation_token.make_token(user),
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
             })
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(
-                        mail_subject, message, to=[to_email]
+                mail_subject, message, to=[to_email]
             )
             if settings.DEVELOPMENT != 'True':
                 email.send()
-            return render(request, 'user/Email.html',{'msg':'Please confirm your email address to complete the registration'})
+            return render(request, 'user/Email.html',
+                          {'msg': 'Please confirm your email address to complete the registration'})
     else:
         from django.urls import reverse
         form = NewUserForm()
@@ -98,9 +99,10 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return render(request,'user/Email.html',{'msg':'Thank you for your email confirmation. Now you can login your account.'})
+        return render(request, 'user/Email.html',
+                      {'msg': 'Thank you for your email confirmation. Now you can login your account.'})
     else:
-        return render(request, 'user/Email.html',{'msg':'Activation link is invalid!'})
+        return render(request, 'user/Email.html', {'msg': 'Activation link is invalid!'})
 
 
 def help_need_view(request):
@@ -130,16 +132,16 @@ def help_need_list(request):
 def volunteer_view(request):
     form = VolunteerForm(request.POST or None)
     if request.method == "POST":
-            if form.is_valid():
-                first_name = request.POST['first_name']
-                last_name = request.POST['last_name']
-                phone = request.POST['phone']
-                address = request.POST['address']
-                volunteer_field = request.POST['volunteer_field']
-                vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address = address, volunteer_field = volunteer_field)
-                messages.success(request, 'Data has been submitted')
-                form = VolunteerForm()
-                # form.save()
-            else:
-                print(form.errors)
-    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form" : form})
+        if form.is_valid():
+            first_name = request.POST['first_name']
+            last_name = request.POST['last_name']
+            phone = request.POST['phone']
+            address = request.POST['address']
+            volunteer_field = request.POST['volunteer_field']
+            vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address=address,
+                                           volunteer_field=volunteer_field)
+            messages.success(request, 'Data has been submitted')
+            form.save()
+        else:
+            print(form.errors)
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form})
