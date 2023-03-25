@@ -1,16 +1,7 @@
-<!DOCTYPE html>
+
 {% extends "user/base.html" %}
-
-<html lang="en">
 {% block content %}
-<head>
-    <meta charset="UTF-8">
-    {% block title %}
-        <title>Volunteer</title>
-    {% endblock %}
-
-    <style>
-
+<style>
 .jumbotron.jumbotron-fluid{
     text-align: center;
     background: none;
@@ -26,8 +17,7 @@
     padding: 10px;
 }
     </style>
-</head>
-<body>
+
 {% load crispy_forms_tags %}
     <div class="section1light">
          <div class="row">
@@ -50,7 +40,12 @@
         <button class="btn btn-primary submitform" type="submit">Submit Form</button>
      </form>
 
+<script>
+                let fname = document.getElementById("id_first_name");
+                fname.value = "{{ user.first_name }}";
+
+                let lname = document.getElementById("id_last_name");
+                lname.value = "{{ user.last_name }}";
+</script>
 
 {% endblock %}
-</body>
-</html>
