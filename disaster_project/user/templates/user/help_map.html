@@ -1,20 +1,21 @@
 {% extends "./base.html" %}
 {% block content %}
-
     <style>
         #map {
-            position: absolute;
-            top: 100px !important;
+            position: relative;
             left: 0;
             width: 100%;
-            height: calc(100% - 100px);
+            height: 500px;
         }
     </style>
-    <div class="content-section col-md-8 col-md-offset-2">
+
+    <div class="row">
         <div id="map">
 
         </div>
     </div>
+
+
     <script>
         navigator.geolocation.getCurrentPosition(showPosition);
 
