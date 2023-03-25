@@ -11,7 +11,6 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'user/bootstrap.min.css' %}" rel="stylesheet"/>
-    <link href="{% static 'user/darkly.min.css' %}" rel="stylesheet"/>
 
     <link href="{% static 'user/leaflet.css' %}" rel="stylesheet"/>
     <link href="{% static 'user/marker/MarkerCluster.css' %}" rel="stylesheet"/>
@@ -35,14 +34,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
+
+                 {% if user.is_authenticated %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
+            </li>
+        {% else %}
+            <li class="nav-item">
+                <a class="nav-link" href="#">Welcome, Guest</a>
+            </li>
+        {% endif %}
+
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About Us</a>
-                </li>
-
-
                 <li class="nav-item">
                     <a class="nav-link" href="#">Maps</a>
                 </li>
@@ -67,6 +72,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/logout">Logout</a>
                     </li>
+
                 {% else %}
                     <li class="nav-item "><a class="nav-link {% if request.path == '/register' %} active {% endif %}"
                                              href="/register">Register</a></li>
@@ -90,15 +96,7 @@
         </ul>
     {% endif %}
     {% block content %}
-        {% if user.is_authenticated %}
-            <li class="nav-item">
-                <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
-            </li>
-        {% else %}
-            <li class="nav-item">
-                <a class="nav-link" href="#">Welcome, Guest</a>
-            </li>
-        {% endif %}
+
     {% endblock content %}
 </div>
 

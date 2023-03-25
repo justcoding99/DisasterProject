@@ -20,7 +20,7 @@ from .forms import NewUserForm, HelpNeedForm, VolunteerForm
 
 
 def index(request):
-    template = loader.get_template('user/base.html')
+    template = loader.get_template('user/index.html')
     context = {}
     if not request.user.is_authenticated:
         context['variable'] = "you are not allowed"
