@@ -1,5 +1,12 @@
 
 {% extends "user/base.html" %}
+{% load custom_tags %}
+
+{% block title %}
+    <title>Disaster Recovery Website Hompage</title>
+{% endblock %}
+
+
 {% block content %}
 <style>
 .jumbotron.jumbotron-fluid{
@@ -19,26 +26,68 @@
     </style>
 
 {% load crispy_forms_tags %}
+<h5>// This is Help-provider Homepage</h5>
     <div class="section1light">
          <div class="row">
             <div class="col-sm-12">
                 <div class="jumbotron jumbotron-fluid">
                   <div class="container">
-                    <h1 class="display-4">How To Volunteer </h1>
-                    <p class="lead 1" style="text-align:left">Provide Food</p>
-                    <p class="lead 2" style="text-align:center">Provide Transportation</p>
-                    <p class="lead 3" style="text-align:right">Provide Shelter</p>
+                    <h1 class="display-4">Your Help Is Appreciated</h1>
+<!--                    <p class="lead 1" style="text-align:left">Provide Food</p>-->
+<!--&lt;!&ndash;                    <p class="lead 2" style="text-align:center">Provide Transportation</p>&ndash;&gt;-->
+<!--                    <p class="lead 3" style="text-align:right">Provide Shelter</p>-->
                   </div>
                 </div>
             </div>
         </div>
    </div>
 
-    <form method="POST" action="">
-     {{ volunteer_form|crispy }} {% csrf_token %}
-        {{ form.as_p }}
-        <button class="btn btn-primary submitform" type="submit">Submit Form</button>
-     </form>
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+        <p class="lead 1" style="text-align:left">Help List</p>
+       <div class="list-group">
+         {% for need in needs %}
+          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1"> {{ need.name }} </h5>
+              <small>{{ need.created_at | prettydate }}</small>
+            </div>
+            <p class="mb-1">{{ need.phone }}</p>
+            <p class="mb-1">{{ need.description }}</p>
+            <small> {{ need.address }}</small>
+          </a>
+                 {% endfor %}
+        </div>
+
+    </div>
+    <div class="col-md-3">
+
+    </div>
+  </div>
+</div>
+
+<!--{% load crispy_forms_tags %}-->
+<!--    <div class="section1light">-->
+<!--         <div class="row">-->
+<!--            <div class="col-sm-12">-->
+<!--                <div class="jumbotron jumbotron-fluid">-->
+<!--                  <div class="container">-->
+<!--                    <h1 class="display-4">How To Volunteer </h1>-->
+<!--                    <p class="lead 1" style="text-align:left">Provide Food</p>-->
+<!--                    <p class="lead 2" style="text-align:center">Provide Transportation</p>-->
+<!--                    <p class="lead 3" style="text-align:right">Provide Shelter</p>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--   </div>-->
+
+<!--    <form method="POST" action="">-->
+<!--     {{ volunteer_form|crispy }} {% csrf_token %}-->
+<!--        {{ form.as_p }}-->
+<!--        <button class="btn btn-primary submitform" type="submit">Submit Form</button>-->
+<!--     </form>-->
 
 <script>
                 let fname = document.getElementById("id_first_name");
@@ -46,6 +95,17 @@
 
                 let lname = document.getElementById("id_last_name");
                 lname.value = "{{ user.last_name }}";
+
+                let username = document.getElementById("id_username");
+                username.value = "{{ user.username }}";
+
+                let email = document.getElementById("id_email");
+                email.value = "{{ user.email }}";
+
+                let phone = document.getElementById("id_phone");
+                phone.value = "{{ obj.phone }}";
+
+
 </script>
 
 {% endblock %}

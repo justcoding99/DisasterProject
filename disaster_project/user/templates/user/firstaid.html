@@ -1,8 +1,11 @@
 <!DOCTYPE html>
+{% extends "user/base.html" %}
 <html lang="en">
 <head>
+{% block title %}
+    <title>First Aid</title>
+{% endblock %}
 
-    <title>Disaster Project-First Aid</title>
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -35,89 +38,89 @@
 
 
 <!-- MENU -->
-<section class="navbar custom-navbar navbar-fixed-top" role="navigation">
-    <div class="container">
+<!--<section class="navbar custom-navbar navbar-fixed-top" role="navigation">-->
+<!--    <div class="container">-->
 
-        <div class="navbar-header">
-            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon icon-bar"></span>
-                <span class="icon icon-bar"></span>
-                <span class="icon icon-bar"></span>
-            </button>
+<!--        <div class="navbar-header">-->
+<!--            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">-->
+<!--                <span class="icon icon-bar"></span>-->
+<!--                <span class="icon icon-bar"></span>-->
+<!--                <span class="icon icon-bar"></span>-->
+<!--            </button>-->
 
-            <!-- lOGO TEXT HERE -->
-            <a href="/" class="navbar-brand">Disaster Recovery Website</a>
-        </div>
+<!--            &lt;!&ndash; lOGO TEXT HERE &ndash;&gt;-->
+<!--            <a href="/" class="navbar-brand">Disaster Recovery Website</a>-->
+<!--        </div>-->
 
-        <!-- MENU LINKS -->
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-nav-first">
+<!--        &lt;!&ndash; MENU LINKS &ndash;&gt;-->
+<!--        <div class="collapse navbar-collapse">-->
+<!--            <ul class="nav navbar-nav navbar-nav-first">-->
 
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, Guest</a>
-                </li>
-                {% endif %}
+<!--                {% if user.is_authenticated %}-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Welcome, {{ user.username }}</a>-->
+<!--                </li>-->
+<!--                {% else %}-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Welcome, Guest</a>-->
+<!--                </li>-->
+<!--                {% endif %}-->
 
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Maps</a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" aria-current="page" href="/">Home</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="#">Maps</a>-->
+<!--                </li>-->
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/help_map">Help Map</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help_need_list">Help Need List</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/first_aid">FirstAid</a>
-                </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/volunteer">Volunteer</a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/help_map">Help Map</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/help_need_list">Help Need List</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/first_aid">FirstAid</a>-->
+<!--                </li>-->
+<!--                {% if user.is_authenticated %}-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/volunteer">Volunteer</a>-->
+<!--                </li>-->
 
-                <li class="nav-item">
-                    <a class="nav-link" href="/logout">Logout</a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/logout">Logout</a>-->
+<!--                </li>-->
 
-                {% else %}
-                <li class="nav-item "><a class="nav-link {% if request.path == '/register' %} active {% endif %}"
-                                         href="/register">Register</a></li>
-                <li class="nav-item"><a class="nav-link {% if request.path == '/login' %} active {% endif %}"
-                                        href="/login">Login</a></li>
-                {% endif %}
-            </ul>
-            {% if not user.is_authenticated %}
-            <ul class="nav navbar-nav navbar-right">
-                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                <li class="section-btn"><a href="/login" data-toggle="modal">Sign in</a></li>
-                <li class="section-btn"><a href="/register" data-toggle="modal">Register</a></li>
-            </ul>
-            {% endif %}
-        </div>
+<!--                {% else %}-->
+<!--                <li class="nav-item "><a class="nav-link {% if request.path == '/register' %} active {% endif %}"-->
+<!--                                         href="/register">Register</a></li>-->
+<!--                <li class="nav-item"><a class="nav-link {% if request.path == '/login' %} active {% endif %}"-->
+<!--                                        href="/login">Login</a></li>-->
+<!--                {% endif %}-->
+<!--            </ul>-->
+<!--            {% if not user.is_authenticated %}-->
+<!--            <ul class="nav navbar-nav navbar-right">-->
+<!--                <li><a href="#"><i class="fa fa-facebook-square"></i></a></li>-->
+<!--                <li><a href="#"><i class="fa fa-twitter"></i></a></li>-->
+<!--                <li><a href="#"><i class="fa fa-instagram"></i></a></li>-->
+<!--                <li class="section-btn"><a href="/login" data-toggle="modal">Sign in</a></li>-->
+<!--                <li class="section-btn"><a href="/register" data-toggle="modal">Register</a></li>-->
+<!--            </ul>-->
+<!--            {% endif %}-->
+<!--        </div>-->
 
-    </div>
-</section>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-</ul>
-{% endif %}
+<!--    </div>-->
+<!--</section>-->
+<!--{% if messages %}-->
+<!--<ul class="messages">-->
+<!--    {% for message in messages %}-->
+<!--    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">-->
+<!--        {{ message }}-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--    </div>-->
+<!--    {% endfor %}-->
+<!--</ul>-->
+<!--{% endif %}-->
 {% block content %}
 
 
@@ -293,70 +296,70 @@
 
 {% endblock content %}
 
-<!-- FOOTER -->
-<footer data-stellar-background-ratio="0.5">
-    <div class="container">
-        <div class="row">
+<!--&lt;!&ndash; FOOTER &ndash;&gt;-->
+<!--<footer data-stellar-background-ratio="0.5">-->
+<!--    <div class="container">-->
+<!--        <div class="row">-->
 
-            <div class="col-md-5 col-sm-12">
-                <div class="footer-thumb footer-info">
-                    <h2>Disaster Recovery Website</h2>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                        labore et dolore magna aliqua.</p>
-                </div>
-            </div>
+<!--            <div class="col-md-5 col-sm-12">-->
+<!--                <div class="footer-thumb footer-info">-->
+<!--                    <h2>Disaster Recovery Website</h2>-->
+<!--                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut-->
+<!--                        labore et dolore magna aliqua.</p>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="col-md-2 col-sm-4">
-                <div class="footer-thumb">
-                    <h2>Who are we?</h2>
-                    <ul class="footer-link">
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Press</a></li>
-                    </ul>
-                </div>
-            </div>
+<!--            <div class="col-md-2 col-sm-4">-->
+<!--                <div class="footer-thumb">-->
+<!--                    <h2>Who are we?</h2>-->
+<!--                    <ul class="footer-link">-->
+<!--                        <li><a href="#">About Us</a></li>-->
+<!--                        <li><a href="#">Press</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="col-md-2 col-sm-4">
-                <div class="footer-thumb">
-                    <h2>Services</h2>
-                    <ul class="footer-link">
-                        <li><a href="#">Help</a></li>
-                        <li><a href="#">Provide</a></li>
-                        <li><a href="#">Donate</a></li>
-                    </ul>
-                </div>
-            </div>
+<!--            <div class="col-md-2 col-sm-4">-->
+<!--                <div class="footer-thumb">-->
+<!--                    <h2>Services</h2>-->
+<!--                    <ul class="footer-link">-->
+<!--                        <li><a href="#">Help</a></li>-->
+<!--                        <li><a href="#">Provide</a></li>-->
+<!--                        <li><a href="#">Donate</a></li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="col-md-3 col-sm-4">
-                <div class="footer-thumb">
-                    <h2>Find us</h2>
-                    <p>Sile, Istanbul, Turkey <br> Mesrutiyet, Isik University 34980</p>
-                </div>
-            </div>
+<!--            <div class="col-md-3 col-sm-4">-->
+<!--                <div class="footer-thumb">-->
+<!--                    <h2>Find us</h2>-->
+<!--                    <p>Sile, Istanbul, Turkey <br> Mesrutiyet, Isik University 34980</p>-->
+<!--                </div>-->
+<!--            </div>-->
 
-            <div class="col-md-12 col-sm-12">
-                <div class="footer-bottom">
-                    <div class="col-md-6 col-sm-5">
-                        <div class="copyright-text">
-                            <p>Copyright &copy; 2023 Your Company</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-sm-7">
-                        <div class="phone-contact">
-                            <p>Call us <span>(+90) 0555 555 55 55</span></p>
-                        </div>
-                        <ul class="social-icon">
-                            <li><a href="#" class="fa fa-facebook-square" attr="facebook icon"></a></li>
-                            <li><a href="#" class="fa fa-twitter"></a></li>
-                            <li><a href="#" class="fa fa-instagram"></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="col-md-12 col-sm-12">-->
+<!--                <div class="footer-bottom">-->
+<!--                    <div class="col-md-6 col-sm-5">-->
+<!--                        <div class="copyright-text">-->
+<!--                            <p>Copyright &copy; 2023 Your Company</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6 col-sm-7">-->
+<!--                        <div class="phone-contact">-->
+<!--                            <p>Call us <span>(+90) 0555 555 55 55</span></p>-->
+<!--                        </div>-->
+<!--                        <ul class="social-icon">-->
+<!--                            <li><a href="#" class="fa fa-facebook-square" attr="facebook icon"></a></li>-->
+<!--                            <li><a href="#" class="fa fa-twitter"></a></li>-->
+<!--                            <li><a href="#" class="fa fa-instagram"></a></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
 
-        </div>
-    </div>
-</footer>
+<!--        </div>-->
+<!--    </div>-->
+<!--</footer>-->
 
 
 <!-- SCRIPTS -->

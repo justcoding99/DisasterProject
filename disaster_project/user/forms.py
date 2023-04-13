@@ -31,7 +31,7 @@ class HelpNeedForm(forms.ModelForm):
 
     class Meta:
         model = HelpNeed
-        fields = ("name", "phone", "address", "lat", "lon")
+        fields = ("name", "phone", "address", "lat", "lon", "description")
 
 
 # --------------- Rawan -------------------
@@ -42,5 +42,25 @@ class VolunteerForm(forms.ModelForm):
 
     class Meta:
         model = Volunteer
-        fields = ("first_name","last_name", "phone", "address", "volunteer_field")
+        fields = ("first_name","last_name", "phone", "address")
+
+# class ProfileForm(VolunteerForm):
+#     class Meta:
+#         model = Volunteer
+#         fields = ('username','email') + VolunteerForm.Meta.fields
+#     def __init__(self, *args, **kwargs):
+#         super(ProfileForm, self).__init__(*args, **kwargs)
+#         self.fields.pop('volunteer_field')
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name','last_name', 'username', 'email', 'phone', 'address')
+        help_texts = {
+            'username': None,
+        }
+        def __init__(self, *args, **kwargs):
+            super(ProfileForm, self).__init__(*args, **kwargs)
+            self.fields['username'].disabled = True
+            self.fields['email'].disabled = True
 

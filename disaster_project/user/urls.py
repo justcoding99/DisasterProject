@@ -5,7 +5,7 @@ from . import views
 app_name = "user"
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.help_need_view, name='index'),
     path('login', views.login_view, name='login'),
     path('help_need', views.help_need_view, name='help_need'),
     path('help_need_list', views.help_need_list, name='help_need_list'),
@@ -15,4 +15,6 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("activate/<str:uidb64>/<str:token>", views.activate, name='activate'),
     path('first_aid', views.firstaid_view, name='first_aid'),
+    path('profile', views.profile_view, name='profile'),
+    path('ready_form', views.ready_form_view, name='ready_form'),
 ]
