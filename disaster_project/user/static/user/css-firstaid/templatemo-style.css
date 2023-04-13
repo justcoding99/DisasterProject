@@ -335,6 +335,7 @@ http://www.templatemo.com/tm-509-hydro
     overflow: hidden;
     padding-top: 10em;
     text-align: left;
+    margin-bottom: 25px;
   }
 
   #home h1 {
@@ -696,6 +697,7 @@ http://www.templatemo.com/tm-509-hydro
     position: relative;
     padding-top: 80px;
     padding-bottom: 60px;
+    margin-top: 50px;
   }
 
   footer h2 {
@@ -910,6 +912,7 @@ http://www.templatemo.com/tm-509-hydro
 
     #home {
       text-align: center;
+      margin-bottom: 25px;
     }
 
     .home-info {
@@ -1016,6 +1019,7 @@ http://www.templatemo.com/tm-509-hydro
 
     .home-info span {
       margin-top: 20px;
+      margin-bottom: 25px;
     }
 
     #about .about-info:first-child {
@@ -1056,3 +1060,5 @@ http://www.templatemo.com/tm-509-hydro
     }
     
   }
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% extends "user/base.html" %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+  <title>Profile</title>
+  {% endblock %}
+
+
+</head>
+<body>
+{% load crispy_forms_tags %}
+{% block content %}
+ <style>
+          .updatebtn{
+            margin-top: 15px;
+            display: block;
+            padding: 10px;
+          }
+    </style>
+<h1>This is your profile</h1>
+<!--<h2> {{ user.first_name }} </h2>-->
+<!--<h2> {{ user.last_name }} </h2>-->
+<!--<h2> {{ user.username }} </h2>-->
+<!--<h2> {{ user.email }} </h2>-->
+<!--<h2> {{ obj.phone }} </h2>-->
+
+
+<form method="POST" action="">
+     {{ profile_form|crispy }} {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-primary updatebtn" type="submit">Update</button>
+     </form>
+
+<script>
+                let first_name = document.getElementById("id_first_name");
+                first_name.value = "{{ user.first_name }}";
+
+                let last_name = document.getElementById("id_last_name");
+                last_name.value = "{{ user.last_name }}";
+
+                let username = document.getElementById("id_username");
+                username.value = "{{ user.username }}";
+
+                let email = document.getElementById("id_email");
+                email.value = "{{ user.email }}";
+
+                let phone = document.getElementById("id_phone");
+                phone.value = "{{ user.phone }}";
+
+                let address = document.getElementById("id_address");
+                address.value = "{{ user.address }}";
+</script>
+{% endblock %}
+
+</body>
+</html>

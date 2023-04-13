@@ -3,7 +3,9 @@
 <html lang="en">
 <head>
 
-    <title>Disaster Project-First Aid</title>
+    {% block title %}
+    <title>-- BASE --</title>
+    {% endblock %}
 
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
@@ -50,7 +52,7 @@
             </button>
 
             <!-- lOGO TEXT HERE -->
-            <a href="/" class="navbar-brand">Disaster Recovery Website</a>
+            <a href="#" class="navbar-brand">Disaster Recovery Website</a>
         </div>
 
         <!-- MENU LINKS -->
@@ -59,17 +61,23 @@
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, {{ user.username }}</a>
+                    <a class="nav-link" href="/profile">Welcome, {{ user.username }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/volunteer">Home</a>
                 </li>
                 {% else %}
                 <li class="nav-item">
                     <a class="nav-link" href="#">Welcome, Guest</a>
                 </li>
-                {% endif %}
-
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
                 </li>
+                {% endif %}
+
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" aria-current="page" href="/">Home</a>-->
+<!--                </li>-->
                 <li class="nav-item">
                     <a class="nav-link" href="#">Maps</a>
                 </li>
@@ -77,17 +85,17 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/help_map">Help Map</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/help_need_list">Help Need List</a>
-                </li>
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/help_need_list">Help Need List</a>-->
+<!--                </li>-->
                 <li class="nav-item">
                     <a class="nav-link" href="/first_aid">FirstAid</a>
                 </li>
-                {% if user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/volunteer">Volunteer</a>
-                </li>
 
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Donate</a>
+                </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
@@ -125,141 +133,13 @@
     {% endfor %}
 </div>
 {% endif %}
-    {% block content %}
-    <!-- ABOUT -->
-    <section id="about" data-stellar-background-ratio="0.5">
-        <div class="container">
-            <div class="row">
-
-                <div class="col-md-5 col-sm-6">
-                    <div class="about-info">
-                        <div class="section-title">
-                            <h2>Let's Find Out</h2>
-                            <span class="line-bar">...</span>
-                        </div>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut
-                            labore et dolore magna aliqua. Ut enim ad minim.</p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor.</p>
-                    </div>
-                </div>
-
-                <div class="col-md-3 col-sm-6">
-                    <div class="about-info skill-thumb">
-
-                        <strong>Medic Kit</strong>
-                        <span class="pull-right">85%</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="85"
-                                 aria-valuemin="0" aria-valuemax="100" style="width: 85%;"></div>
-                        </div>
-
-                        <strong>First Aid</strong>
-                        <span class="pull-right">90%</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="90"
-                                 aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
-                        </div>
-
-                        <strong>Ambulance</strong>
-                        <span class="pull-right">75%</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="75"
-                                 aria-valuemin="0" aria-valuemax="100" style="width: 75%;"></div>
-                        </div>
-
-                        <strong>AFAD</strong>
-                        <span class="pull-right">70%</span>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="70"
-                                 aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="col-md-4 col-sm-12">
-                    <div class="about-image">
-                        <img src="/static/user/images-firstaid/about-images.jpg" class="img-responsive" alt="">
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
 
 
-<!-- WORK -->
-<section id="work" data-stellar-background-ratio="0.5">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-md-12 col-sm-12">
-                <div class="section-title">
-                    <h2>Our Suggestions</h2>
-                    <span class="line-bar">...</span>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-                <!-- WORK THUMB -->
-                <div class="work-thumb">
-                    <a href="#" class="image-popup">
-                        <img src="/static/user/images-firstaid/work-image1.jpg" class="img-responsive" alt="Work">
-
-                        <div class="work-info">
-                            <h3>Provide Food</h3>
-                            <small>Edible Package</small>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-                <!-- WORK THUMB -->
-                <div class="work-thumb">
-                    <a href="#" class="image-popup">
-                        <img src="/static/user/images-firstaid/house-image.jpg" class="img-responsive" alt="Work">
-
-                        <div class="work-info">
-                            <h3>Provide Shelter</h3>
-                            <small>Tent & Hotel</small>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-                <!-- WORK THUMB -->
-                <div class="work-thumb">
-                    <a href="#" class="image-popup">
-                        <img src="/static/user/images-firstaid/gasoline-image.png" class="img-responsive" alt="Work">
-
-                        <div class="work-info">
-                            <h3>Provide Fuel</h3>
-                            <small>Fuel Oil & Gasoline</small>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-3 col-sm-6">
-                <!-- WORK THUMB -->
-                <div class="work-thumb">
-                    <a href="#" class="image-popup">
-                        <img src="/static/user/images-firstaid/medic-kit.png" class="img-responsive" alt="Work">
-
-                        <div class="work-info">
-                            <h3>Provide Help</h3>
-                            <small>Medic Kit & Lamb</small>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
+{% block content %}
+    <h1>replace me</h1>
 {% endblock content %}
+
+
 </div>
 
 

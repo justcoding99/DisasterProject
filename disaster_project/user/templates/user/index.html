@@ -1,6 +1,10 @@
 {% extends "./base.html" %}
 {% load crispy_forms_tags %}
 
+{% block title %}
+    <title>Disaster Recovery Website</title>
+{% endblock %}
+
 {% block content %}
   <style>
     /* Style the button */
@@ -67,6 +71,15 @@ document.getElementById("myButton").addEventListener("click", function() {
       margin-top: 10px;
       font-size: 16px;
     }
+    .helpbtn{
+<!--    width: 20%;-->
+    background-color: blue;
+    padding: 10px 24px;
+    margin: 20px;
+    font: 25px;
+
+
+    }
   </style>
 
 <body>
@@ -74,7 +87,17 @@ document.getElementById("myButton").addEventListener("click", function() {
   <div id="emergency-number">
     <p><strong>Emergency Phone Number:</strong> 911</p>
   </div>
-
+<div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-8">
+    <h1 style="text-align: center">What Do You Need?</h1>
+    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Shelter</a>
+    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Heaters</a>
+    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Clothes</a>
+    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Medical Supplies</a>
+</div>
+     <div class="col-md-2"></div>
+</div>
   <script>
     function toggleEmergencyNumber() {
       var emergencyNumber = document.getElementById("emergency-number");
@@ -92,18 +115,26 @@ document.getElementById("myButton").addEventListener("click", function() {
 
 
     <div class="content-section col-md-8 col-md-offset-2">
+        <h2>Create A Help Post</h2>
         <form method="POST">
-            <input type="hidden" name="csrfmiddlewaretoken" value="Z9Ei8pREbpzzkP2UihkqObOpsRhX45FVRkUIoT8l44rjVSfMPe2OaJSIX1Z7QHHk">
+             {{ help_need_form|crispy }} {% csrf_token %}
+            {{ form.as_p }}
+<!--            <input type="hidden" name="csrfmiddlewaretoken" value="Z9Ei8pREbpzzkP2UihkqObOpsRhX45FVRkUIoT8l44rjVSfMPe2OaJSIX1Z7QHHk">-->
 
 
-<div id="div_id_name" class="mb-3"> <label for="id_name" class="form-label requiredField">
-                Name<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_name"> </div> <div id="div_id_phone" class="mb-3"> <label for="id_phone" class="form-label requiredField">
-                Phone<span class="asteriskField">*</span> </label> <input type="text" name="phone" maxlength="30" class="textinput form-control" required id="id_phone"> </div> <div id="div_id_address" class="mb-3"> <label for="id_address" class="form-label">
-                Address
-            </label> <input type="text" name="address" class="textinput form-control" id="id_address"> </div> <input type="hidden" name="lat" value="0" id="id_lat"> <input type="hidden" name="lon" value="0" id="id_lon">
+<!--<div id="div_id_name" class="mb-3"> <label for="id_name" class="form-label requiredField">-->
+<!--                Name<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_name"> </div>-->
+
+<!--            <div id="div_id_description" class="mb-3"> <label for="id_description" class="form-label requiredField">-->
+<!--                Description<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_description"> </div>-->
+
+<!--            <div id="div_id_phone" class="mb-3"> <label for="id_phone" class="form-label requiredField">-->
+<!--                Phone<span class="asteriskField">*</span> </label> <input type="text" name="phone" maxlength="30" class="textinput form-control" required id="id_phone"> </div> <div id="div_id_address" class="mb-3"> <label for="id_address" class="form-label">-->
+<!--                Address-->
+<!--            </label> <input type="text" name="address" class="textinput form-control" id="id_address"> </div> <input type="hidden" name="lat" value="0" id="id_lat"> <input type="hidden" name="lon" value="0" id="id_lon">-->
+
 
             <div id="demo">
-
             </div>
             <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
 

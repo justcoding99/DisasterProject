@@ -16,7 +16,8 @@ from .models import HelpNeed, Volunteer
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm, VolunteerForm
+from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm
+
 
 
 def index(request):
@@ -48,7 +49,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
-                return redirect("user:index")
+                return redirect("user:volunteer")
             else:
                 messages.error(request, "Invalid username or password.")
         else:
@@ -66,6 +67,7 @@ def register_view(request):
             if settings.DEVELOPMENT != 'True':
                 user.is_active = False
             user.save()
+
             # to get the domain of the current site
             current_site = get_current_site(request)
             mail_subject = 'Activation link has been sent to your email id'
@@ -115,7 +117,7 @@ def help_need_view(request):
         else:
             messages.error(request, "Name and phone are mandatory.")
     form = HelpNeedForm()
-    return render(request=request, template_name="user/help_need.html", context={"help_need_form": form})
+    return render(request=request, template_name="user/index.html", context={"help_need_form": form})
 
 
 def help_map(request):
@@ -130,6 +132,7 @@ def help_need_list(request):
 
 # --------------- Rawan -------------------
 def volunteer_view(request):
+    needs = HelpNeed.objects.all()
     form = VolunteerForm(request.POST or None)
     if request.method == "POST":
         if form.is_valid():
@@ -144,7 +147,19 @@ def volunteer_view(request):
             form.save()
         else:
             print(form.errors)
-    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form})
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": needs})
 
 def firstaid_view(request):
     return render(request=request, template_name="user/firstaid.html")
+
+def profile_view(request):
+    form = ProfileForm(request.POST or None, instance=request.user)
+    if request.method == 'POST':
+        if form.is_valid():
+         form.save()
+    else:
+        form = ProfileForm(request.POST or None, instance=request.user)
+    return render(request=request, template_name="user/profile.html", context={"profile_form": form})
+
+def ready_form_view(request):
+    return render(request=request, template_name="user/ready_form.html", context={})

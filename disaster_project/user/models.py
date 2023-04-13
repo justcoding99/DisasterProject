@@ -7,6 +7,9 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     extra = models.CharField(max_length=30, blank=True)
+    phone = models.CharField(max_length=10, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+
 
 
 class HelpNeed(models.Model):
@@ -15,6 +18,7 @@ class HelpNeed(models.Model):
     address = models.TextField(null=True, blank=True)
     lat = models.CharField(max_length=255, default='0')
     lon = models.CharField(max_length=255, default='0')
+    description = models.CharField(max_length=255, blank=False, null=True)
 
     is_helped = models.BooleanField(default=False)
     helper = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
