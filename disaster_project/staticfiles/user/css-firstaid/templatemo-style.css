@@ -13,7 +13,11 @@ http://www.templatemo.com/tm-509-hydro
     overflow-x: hidden;
   }
 
-
+btn btn-primary updatebtn{
+            margin-top: 15px;
+            display: block;
+            padding: 10px;
+}
   /*---------------------------------------
      TYPOGRAPHY              
   -----------------------------------------*/
@@ -1056,3 +1060,4 @@ http://www.templatemo.com/tm-509-hydro
     }
     
   }
+

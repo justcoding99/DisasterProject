@@ -52,7 +52,12 @@
             </button>
 
             <!-- lOGO TEXT HERE -->
-            <a href="#" class="navbar-brand">Disaster Recovery Website</a>
+            {% if user.is_authenticated %}
+            <a href="/volunteer" class="navbar-brand">Disaster Recovery Website</a>
+            {% else %}
+            <a href="/" class="navbar-brand">Disaster Recovery Website</a>
+            {% endif %}
+
         </div>
 
         <!-- MENU LINKS -->
@@ -68,7 +73,7 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Welcome, Guest</a>
+                    <a class="nav-link" href="/">Welcome, Guest</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
@@ -91,11 +96,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/first_aid">FirstAid</a>
                 </li>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Donate</a>
-                </li>
                 {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="volunteer_requests">Request Help</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>

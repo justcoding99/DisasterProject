@@ -23,10 +23,26 @@
     display: block;
     padding: 10px;
 }
+.btnclass {
+<!--  height: 200px;-->
+<!--  width: 200px;-->
+  background-color: yellowgreen;
+  position: relative;
+}
+
+.alist:hover .groupbtn {
+  display: block;
+}
+.groupbtn {
+  display: none;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
     </style>
 
 {% load crispy_forms_tags %}
-<h5>// This is Help-provider Homepage</h5>
+<!--<h5>// This is Help-provider Homepage</h5>-->
     <div class="section1light">
          <div class="row">
             <div class="col-sm-12">
@@ -48,14 +64,32 @@
         <p class="lead 1" style="text-align:left">Help List</p>
        <div class="list-group">
          {% for need in needs %}
-          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+          <a href="#" class="list-group-item list-group-item-action alist" aria-current="true">
+              <div class="row">
+    <div class="col-sm-9">
             <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1"> {{ need.name }} </h5>
+              <h5 class="mb-1"> {{ need.first_name }} </h5>
+                <h5 class="mb-1"> {{ need.last_name }} </h5>
+<!--                <a href='{{ instance.get_absolute_url }}'></a>-->
               <small>{{ need.created_at | prettydate }}</small>
             </div>
             <p class="mb-1">{{ need.phone }}</p>
             <p class="mb-1">{{ need.description }}</p>
             <small> {{ need.address }}</small>
+        </div>
+                  <div class="col-sm-3">
+                      <form action="" method="post">
+              <div class="btn-group btnclass" role="group" aria-label="Basic example">
+
+
+
+                  <button type="button" class="btn btn-secondary groupbtn">Help</button>
+                  <button type="button" class="btn btn-secondary groupbtn">Delete</button>
+
+              </div>
+                          </form>
+                  </div>
+        </div>
           </a>
                  {% endfor %}
         </div>
@@ -105,6 +139,12 @@
                 let phone = document.getElementById("id_phone");
                 phone.value = "{{ obj.phone }}";
 
+<!--function help() {-->
+<!--    if (!need.is_helped) {-->
+<!--        need.is_helped.value = True;-->
+<!--        console.log("Thank You For Your Help")-->
+<!--    }-->
+<!--  }-->
 
 </script>
 

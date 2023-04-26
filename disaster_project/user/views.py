@@ -16,7 +16,8 @@ from .models import HelpNeed, Volunteer
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm
+from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm, ReadyForm, VolunteerRequestForm, ClothesRequestForm
+from django.http import JsonResponse
 
 
 
@@ -161,5 +162,87 @@ def profile_view(request):
         form = ProfileForm(request.POST or None, instance=request.user)
     return render(request=request, template_name="user/profile.html", context={"profile_form": form})
 
-def ready_form_view(request):
-    return render(request=request, template_name="user/ready_form.html", context={})
+def food_form_view(request):
+    form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:food_form")
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type':"victim"})
+    return render(request=request, template_name="user/food_form.html", context={"ready_form":form})
+def shelter_form_view(request):
+    form = ReadyForm(request.POST or None,initial={'help_class': "shelter", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:shelter_form")
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "shelter", 'user_type':"victim"})
+    return render(request=request, template_name="user/shelter_form.html", context={"ready_form":form})
+def medical_form_view(request):
+    form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:medical_form")
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type':"victim"})
+    return render(request=request, template_name="user/medical_form.html", context={"ready_form":form})
+
+def hygiene_form_view(request):
+    form = ReadyForm(request.POST or None,initial={'help_class': "hygiene", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:hygiene_form")
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "hygiene", 'user_type':"victim"})
+    return render(request=request, template_name="user/hygiene_form.html", context={"ready_form":form})
+
+def clothes_form_view(request):
+    form = ClothesRequestForm(request.POST or None,initial={'help_class': "clothes", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:clothes_form")
+    else:
+        form = ClothesRequestForm(request.POST or None,initial={'help_class': "clothes", 'user_type':"victim"})
+    return render(request=request, template_name="user/clothes_form.html", context={"ready_form":form})
+
+def heaters_form_view(request):
+    form = ReadyForm(request.POST or None,initial={'help_class': "heating", 'user_type':"victim"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Your help request has been received.")
+            return redirect("user:heaters_form")
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "heating", 'user_type':"victim"})
+    return render(request=request, template_name="user/heaters_form.html", context={"ready_form":form})
+
+def volunteer_requests(request):
+    form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer"})
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            messages.info(request, f"Volunteer, Your help request has been received.")
+            return redirect("user:volunteer_requests")
+    else:
+        form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer"})
+    return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form":form})
+
+# def update_status(request, id):
+#     obj = HelpNeed.objects.get(id=id)
+#     if request.method == "POST":
+#         obj.update(is_helped=request.POST[True])
+#     context = {
+#         "object": obj
+#     }
+#     return render(request=request, template_name="user/volunteer_requests.html", context={"theobj":obj})
+
