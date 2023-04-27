@@ -33,7 +33,6 @@ class HelpNeedForm(forms.ModelForm):
         fields = ("first_name","last_name", "phone", "address", "lat", "lon", "description")
 
 
-# --------------- Rawan -------------------
 
 class VolunteerForm(forms.ModelForm):
     first_name = forms.CharField(required=True)

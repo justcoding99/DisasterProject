@@ -131,7 +131,7 @@ def help_need_list(request):
     return render(request=request, template_name="user/help_need_list.html", context={"needs": needs})
 
 
-# --------------- Rawan -------------------
+
 def volunteer_view(request):
     needs = HelpNeed.objects.all()
     form = VolunteerForm(request.POST or None)
