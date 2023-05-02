@@ -86,8 +86,11 @@ DATABASES = {
         'NAME': 'djongo',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017'
-
+            'host': 'mongodb://localhost:27017',
+            'host': 'localhost',
+            'port': 27017,
+            'username': 'root',
+            'password': 'example',
         }
     }
 }
