@@ -57,7 +57,7 @@
             {% else %}
             <a href="/" class="navbar-brand">Disaster Recovery Website</a>
             {% endif %}
-
+            
         </div>
 
         <!-- MENU LINKS -->
@@ -96,11 +96,11 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/first_aid">FirstAid</a>
                 </li>
-                {% if user.is_authenticated %}
+
                 <li class="nav-item">
                     <a class="nav-link" href="volunteer_requests">Request Help</a>
                 </li>
-
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
@@ -143,6 +143,12 @@
 {% block content %}
     <h1>replace me</h1>
 {% endblock content %}
+
+
+{% block content %}
+    <h1>replace me</h1>
+{% endblock content %}
+
 
 
 </div>

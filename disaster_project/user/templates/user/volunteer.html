@@ -64,6 +64,7 @@
         <p class="lead 1" style="text-align:left">Help List</p>
        <div class="list-group">
          {% for need in needs %}
+
           <a href="#" class="list-group-item list-group-item-action alist" aria-current="true">
               <div class="row">
     <div class="col-sm-9">
@@ -139,12 +140,14 @@
                 let phone = document.getElementById("id_phone");
                 phone.value = "{{ obj.phone }}";
 
+
 <!--function help() {-->
 <!--    if (!need.is_helped) {-->
 <!--        need.is_helped.value = True;-->
 <!--        console.log("Thank You For Your Help")-->
 <!--    }-->
 <!--  }-->
+
 
 </script>
 

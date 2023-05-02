@@ -21,6 +21,7 @@ from django.http import JsonResponse
 
 
 
+
 def index(request):
     template = loader.get_template('user/index.html')
     context = {}
@@ -162,6 +163,7 @@ def profile_view(request):
         form = ProfileForm(request.POST or None, instance=request.user)
     return render(request=request, template_name="user/profile.html", context={"profile_form": form})
 
+
 def food_form_view(request):
     form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type':"victim"})
     if request.method == 'POST':
@@ -245,4 +247,5 @@ def volunteer_requests(request):
 #         "object": obj
 #     }
 #     return render(request=request, template_name="user/volunteer_requests.html", context={"theobj":obj})
+
 
