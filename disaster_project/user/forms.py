@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
-from .models import HelpNeed, Volunteer
+from .models import HelpNeed, Volunteer, ClothesRequest
 
 User = get_user_model()
 
@@ -24,17 +24,15 @@ class NewUserForm(UserCreationForm):
 
 
 class HelpNeedForm(forms.ModelForm):
-    name = forms.CharField(required=True)
     lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
     lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
-    address = forms.CharField(required=False)
+    address = forms.CharField(required=True)
 
     class Meta:
         model = HelpNeed
-        fields = ("name", "phone", "address", "lat", "lon", "description")
+        fields = ("first_name","last_name", "phone", "address", "lat", "lon", "description")
 
 
-# --------------- Rawan -------------------
 
 class VolunteerForm(forms.ModelForm):
     first_name = forms.CharField(required=True)
@@ -52,15 +50,49 @@ class VolunteerForm(forms.ModelForm):
 #         super(ProfileForm, self).__init__(*args, **kwargs)
 #         self.fields.pop('volunteer_field')
 
+class ReadyForm(forms.ModelForm):
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=True)
+    help_class = forms.CharField(max_length=20, widget=forms.HiddenInput())
+    user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
+    class Meta:
+        model = HelpNeed
+        fields = ("first_name","last_name", "phone", "address","lat", "lon", "quantity", "help_class", "user_type")
+
+class ClothesRequestForm(forms.ModelForm):
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=True)
+    help_class = forms.CharField(max_length=20, widget=forms.HiddenInput())
+    user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
+
+    class Meta:
+        model = ClothesRequest
+        fields = ("first_name","last_name", "phone", "address","lat", "lon", "quantity", "help_class", "user_type", "category", "size")
+
 class ProfileForm(forms.ModelForm):
+    username = forms.CharField(required=False, disabled=True)
+    email = forms.CharField(required=False, disabled=True)
     class Meta:
         model = User
         fields = ('first_name','last_name', 'username', 'email', 'phone', 'address')
         help_texts = {
             'username': None,
         }
-        def __init__(self, *args, **kwargs):
-            super(ProfileForm, self).__init__(*args, **kwargs)
-            self.fields['username'].disabled = True
-            self.fields['email'].disabled = True
+        # def __init__(self, *args, **kwargs):
+        #     super(ProfileForm, self).__init__(*args, **kwargs)
+        #     self.fields['username'].disabled = True
+        #     self.fields['email'].disabled = True
+
+class VolunteerRequestForm(forms.ModelForm):
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=True)
+    user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
+
+    class Meta:
+        model = HelpNeed
+        fields = ("first_name","last_name", "address", "lat", "lon", "quantity", "help_class", "user_type")
+
 
