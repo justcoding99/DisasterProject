@@ -17,4 +17,6 @@ urlpatterns = [
     path('first_aid', views.firstaid_view, name='first_aid'),
     path('profile', views.profile_view, name='profile'),
     path('ready_form', views.ready_form_view, name='ready_form'),
+    path('admin', views.admin_view, name='admin'),
+    path('userslist', views.userslist_view, name='userslist'),
 ]
