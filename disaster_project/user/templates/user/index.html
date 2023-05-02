@@ -72,11 +72,12 @@ document.getElementById("myButton").addEventListener("click", function() {
       font-size: 16px;
     }
     .helpbtn{
-<!--    width: 20%;-->
+    width: 20%;
     background-color: blue;
     padding: 10px 24px;
     margin: 20px;
-    font: 25px;
+    font: 30px;
+
 
 
     }
@@ -88,15 +89,17 @@ document.getElementById("myButton").addEventListener("click", function() {
     <p><strong>Emergency Phone Number:</strong> 911</p>
   </div>
 <div class="row">
-    <div class="col-md-2"></div>
-    <div class="col-md-8">
+<!--    <div class="col-md-2"></div>-->
+    <div class="col-md-12">
     <h1 style="text-align: center">What Do You Need?</h1>
-    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Shelter</a>
-    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Heaters</a>
-    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Clothes</a>
-    <a class="btn btn-primary helpbtn" href="/ready_form" role="button">Medical Supplies</a>
+    <a class="btn btn-primary helpbtn" href="/food_form" role="button">Food</a>
+    <a class="btn btn-primary helpbtn" href="/shelter_form" role="button">Shelter</a>
+    <a class="btn btn-primary helpbtn" href="/heaters_form" role="button">Heaters</a>
+    <a class="btn btn-primary helpbtn" href="/clothes_form" role="button">Clothes</a>
+    <a class="btn btn-primary helpbtn" href="/medical_form" role="button">Medical Supplies</a>
+    <a class="btn btn-primary helpbtn" href="/hygiene_form" role="button">Hygiene Kits</a>
 </div>
-     <div class="col-md-2"></div>
+<!--     <div class="col-md-2"></div>-->
 </div>
   <script>
     function toggleEmergencyNumber() {
@@ -114,33 +117,36 @@ document.getElementById("myButton").addEventListener("click", function() {
 
 
 
-    <div class="content-section col-md-8 col-md-offset-2">
-        <h2>Create A Help Post</h2>
-        <form method="POST">
-             {{ help_need_form|crispy }} {% csrf_token %}
-            {{ form.as_p }}
-<!--            <input type="hidden" name="csrfmiddlewaretoken" value="Z9Ei8pREbpzzkP2UihkqObOpsRhX45FVRkUIoT8l44rjVSfMPe2OaJSIX1Z7QHHk">-->
+
+<!--    <div class="content-section col-md-8 col-md-offset-2">-->
+<!--        <h2>Create A Help Post</h2>-->
+<!--        <form method="POST">-->
+<!--             {{ help_need_form|crispy }} {% csrf_token %}-->
+<!--            {{ form.as_p }}-->
+<!--&lt;!&ndash;            <input type="hidden" name="csrfmiddlewaretoken" value="Z9Ei8pREbpzzkP2UihkqObOpsRhX45FVRkUIoT8l44rjVSfMPe2OaJSIX1Z7QHHk">&ndash;&gt;-->
 
 
-<!--<div id="div_id_name" class="mb-3"> <label for="id_name" class="form-label requiredField">-->
-<!--                Name<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_name"> </div>-->
+<!--&lt;!&ndash;<div id="div_id_name" class="mb-3"> <label for="id_name" class="form-label requiredField">&ndash;&gt;-->
+<!--&lt;!&ndash;                Name<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_name"> </div>&ndash;&gt;-->
 
-<!--            <div id="div_id_description" class="mb-3"> <label for="id_description" class="form-label requiredField">-->
-<!--                Description<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_description"> </div>-->
-
-<!--            <div id="div_id_phone" class="mb-3"> <label for="id_phone" class="form-label requiredField">-->
-<!--                Phone<span class="asteriskField">*</span> </label> <input type="text" name="phone" maxlength="30" class="textinput form-control" required id="id_phone"> </div> <div id="div_id_address" class="mb-3"> <label for="id_address" class="form-label">-->
-<!--                Address-->
-<!--            </label> <input type="text" name="address" class="textinput form-control" id="id_address"> </div> <input type="hidden" name="lat" value="0" id="id_lat"> <input type="hidden" name="lon" value="0" id="id_lon">-->
+<!--&lt;!&ndash;            <div id="div_id_description" class="mb-3"> <label for="id_description" class="form-label requiredField">&ndash;&gt;-->
+<!--&lt;!&ndash;                Description<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_description"> </div>&ndash;&gt;-->
 
 
-            <div id="demo">
-            </div>
-            <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
+<!--&lt;!&ndash;            <div id="div_id_phone" class="mb-3"> <label for="id_phone" class="form-label requiredField">&ndash;&gt;-->
+<!--&lt;!&ndash;                Phone<span class="asteriskField">*</span> </label> <input type="text" name="phone" maxlength="30" class="textinput form-control" required id="id_phone"> </div> <div id="div_id_address" class="mb-3"> <label for="id_address" class="form-label">&ndash;&gt;-->
+<!--&lt;!&ndash;                Address&ndash;&gt;-->
+<!--&lt;!&ndash;            </label> <input type="text" name="address" class="textinput form-control" id="id_address"> </div> <input type="hidden" name="lat" value="0" id="id_lat"> <input type="hidden" name="lon" value="0" id="id_lon">&ndash;&gt;-->
 
-            <button class="btn btn-primary" type="submit" id="submit">Submit</button>
 
-        </form>
+<!--            <div id="demo">-->
+<!--            </div>-->
+<!--            <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>-->
+
+
+<!--            <button class="btn btn-primary" type="submit" id="submit">Submit</button>-->
+
+<!--        </form>-->
 
     </div>
     <script>
@@ -165,9 +171,9 @@ document.getElementById("myButton").addEventListener("click", function() {
                 .then((data) => {
                     address_field.value = data.display_name;
                     console.log(data)
+
                 });
         }
-
     </script>
 
 </div>

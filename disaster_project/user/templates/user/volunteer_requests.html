@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% extends "user/base.html" %}
+{% load crispy_forms_tags %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% block title %}
+  <title>Volunteer Requests</title>
+  {% endblock %}
+
+
+</head>
+<body>
+{% block content %}
+
+<!--<h1>{{  theobj.is_helped   }}</h1>-->
+ <style>
+          .updatebtn{
+            margin-top: 15px;
+            margin: auto;
+            display: block;
+            padding: 10px;
+          }
+          .myform{
+            padding: 15px;
+          }
+           button {
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 20px;
+      cursor: pointer;
+    }
+
+    /* Style the button when it is hovered over */
+    button:hover {
+      background-color: #3e8e41;
+    }
+    </style>
+<h1>Request Help</h1>
+
+        <form method="POST" class="myform" action="">
+             {{ help_need_form|crispy }} {% csrf_token %}
+            {{ form.as_p }}
+
+             <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
+
+            <button class="btn btn-primary updatebtn" type="submit" id="submit">Submit</button>
+        </form>
+
+
+
+<script>
+
+        let phone = document.getElementById("id_phone");
+        phone.value = "{{ user.phone }}";
+
+        let address = document.getElementById("id_address");
+        address.value = "{{ user.address }}";
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            }
+        }
+
+        function showPosition(position) {
+            let lat = position.coords.latitude;
+            let lon = position.coords.longitude;
+            let lat_field = document.getElementById("id_lat");
+            let lon_field = document.getElementById("id_lon");
+            let address_field = document.getElementById("id_address");
+            lat_field.value = lat;
+            lon_field.value = lon;
+
+            fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + lat + "&lon=" + lon)
+                .then((response) => response.json())
+                .then((data) => {
+                    address_field.value = data.display_name;
+                    console.log(data)
+
+                });
+        }
+
+</script>
+{% endblock %}
+
+</body>
+</html>
