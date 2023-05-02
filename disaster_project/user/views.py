@@ -12,7 +12,7 @@ from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import HelpNeed, Volunteer
+from .models import HelpNeed, Volunteer, User
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
@@ -47,8 +47,14 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            admin = "admin"
             user = authenticate(username=username, password=password)
-            if user is not None:
+
+            if username == admin:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("user:admin")
+            elif user != None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect("user:volunteer")
@@ -164,6 +170,17 @@ def profile_view(request):
     return render(request=request, template_name="user/profile.html", context={"profile_form": form})
 
 
+
+
+def admin_view(request):
+     return render(request=request, template_name="user/admin.html")
+
+
+
+def userslist_view(request):
+    users = User.objects.all()
+    return render(request=request, template_name="user/userslist.html", context={"users":users})
+
 def food_form_view(request):
     form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type':"victim"})
     if request.method == 'POST':
@@ -247,5 +264,6 @@ def volunteer_requests(request):
 #         "object": obj
 #     }
 #     return render(request=request, template_name="user/volunteer_requests.html", context={"theobj":obj})
+
 
 
