@@ -5,7 +5,7 @@ from . import views
 app_name = "user"
 
 urlpatterns = [
-    path('', views.help_need_view, name='index'),
+    path('', views.request_help_view, name='index'),
     path('login', views.login_view, name='login'),
     path('help_need', views.help_need_view, name='help_need'),
     path('help_need_list', views.help_need_list, name='help_need_list'),
@@ -23,6 +23,8 @@ urlpatterns = [
     path('clothes_form', views.clothes_form_view, name='clothes_form'),
     path('heaters_form', views.heaters_form_view, name='heaters_form'),
     path('volunteer_requests', views.volunteer_requests, name='volunteer_requests'),
+    path('change-status/<int:pk>/', views.change_status, name='change_status'),
+    # path('update_item', views.change_status, name='update_item'),
     # path('<int:pk>/update/', views.update_status, name='update_status'),
 
 ]

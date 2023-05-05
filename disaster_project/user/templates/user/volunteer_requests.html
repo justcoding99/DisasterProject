@@ -44,6 +44,11 @@
     </style>
 <h1>Request Help</h1>
 
+<h1>
+
+
+</h1>
+
         <form method="POST" class="myform" action="">
              {{ help_need_form|crispy }} {% csrf_token %}
             {{ form.as_p }}
@@ -62,6 +67,12 @@
 
         let address = document.getElementById("id_address");
         address.value = "{{ user.address }}";
+
+        let fname = document.getElementById("id_first_name");
+        fname.value = "{{ user.first_name }}";
+
+        let lname = document.getElementById("id_last_name");
+        lname.value = "{{ user.last_name }}";
 
         function getLocation() {
             if (navigator.geolocation) {

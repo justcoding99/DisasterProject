@@ -86,12 +86,36 @@ class ProfileForm(forms.ModelForm):
         #     self.fields['email'].disabled = True
 
 class VolunteerRequestForm(forms.ModelForm):
+    first_name = forms.CharField(widget=forms.HiddenInput())
+    last_name = forms.CharField(widget=forms.HiddenInput())
+    phone = forms.CharField(widget=forms.HiddenInput())
     lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
     lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
     address = forms.CharField(required=True)
     user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
+    help_class = forms.CharField(max_length=20, widget=forms.HiddenInput())
 
     class Meta:
         model = HelpNeed
-        fields = ("first_name","last_name", "address", "lat", "lon", "quantity", "help_class", "user_type")
+        fields = ("first_name","last_name", "address", "phone","lat", "lon", "quantity", "help_class", "user_type")
 
+class VolunteerClothesRequestForm(forms.ModelForm):
+    first_name = forms.CharField(widget=forms.HiddenInput())
+    last_name = forms.CharField(widget=forms.HiddenInput())
+    phone = forms.CharField(widget=forms.HiddenInput())
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=True)
+    user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
+    help_class = forms.CharField(max_length=20, widget=forms.HiddenInput())
+
+    class Meta:
+        model = ClothesRequest
+        fields = (
+        "first_name", "last_name", "phone", "address", "lat", "lon", "quantity", "help_class", "user_type", "category",
+        "size")
+
+class QuantityForm(forms.ModelForm):
+    class Meta:
+        model = HelpNeed
+        fields = ("quantity",)

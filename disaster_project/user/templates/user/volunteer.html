@@ -2,6 +2,7 @@
 {% extends "user/base.html" %}
 {% load custom_tags %}
 
+
 {% block title %}
     <title>Disaster Recovery Website Hompage</title>
 {% endblock %}
@@ -39,6 +40,27 @@
   top: 5px;
   right: 5px;
 }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 14px;
+  text-align: center;
+}
+
+th {
+  background-color: #abd4c6;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-transform: uppercase;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
     </style>
 
 {% load crispy_forms_tags %}
@@ -60,44 +82,77 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-md-9">
+    <div class="col-md-12">
         <p class="lead 1" style="text-align:left">Help List</p>
-       <div class="list-group">
-         {% for need in needs %}
-          <a href="#" class="list-group-item list-group-item-action alist" aria-current="true">
-              <div class="row">
-    <div class="col-sm-9">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1"> {{ need.first_name }} </h5>
-                <h5 class="mb-1"> {{ need.last_name }} </h5>
-<!--                <a href='{{ instance.get_absolute_url }}'></a>-->
-              <small>{{ need.created_at | prettydate }}</small>
-            </div>
-            <p class="mb-1">{{ need.phone }}</p>
-            <p class="mb-1">{{ need.help_class }}</p>
-            <small> {{ need.address }}</small>
-        </div>
-                  <div class="col-sm-3">
-                      <form action="" method="post">
-              <div class="btn-group btnclass" role="group" aria-label="Basic example">
+
+        <table>
+    <tr>
+      <th>ID</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+<!--      <th>Phone</th>-->
+      <th>Address</th>
+      <th>Help Class</th>
+      <th>Quantity</th>
+      <th>Created At</th>
+      <th>Action</th>
+    </tr>
+    {% for need in needs %}
+      <tr id="hiderow">
+        <td>{{ need.id }}</td>
+        <td>{{ need.first_name }}</td>
+        <td>{{ need.last_name }}</td>
+<!--        <td>{{ need.phone }}</td>-->
+        <td>{{ need.address }}</td>
+        <td>{{ need.help_class }}</td>
+        <td>{{ need.quantity }}</td>
+        <td>{{ need.created_at | prettydate }}</td>
+<!--        <td> <button onclick="displayQuantityForm()">Help 1 </button>-->
+<!--            <div id="formContainer"></div>-->
+
+<!--        </td>-->
+        <td>  <a class="btn btn-primary" href="{% url 'user:change_status' pk=need.pk %}" role="button" onclick="hide()">Help</a> </td>
+      </tr>
+      {% endfor %}
+
+   </table>
 
 
 
-                  <button type="button" class="btn btn-secondary groupbtn">Help</button>
-                  <button type="button" class="btn btn-secondary groupbtn">Delete</button>
+<!--       <div class="list-group">-->
+<!--         {% for need in needs %}-->
+<!--          <a href="#" class="list-group-item list-group-item-action alist" aria-current="true">-->
+<!--              <div class="row">-->
+<!--    <div class="col-sm-9">-->
+<!--            <div class="d-flex w-100 justify-content-between">-->
+<!--              <h5 class="mb-1"> {{ need.first_name }} </h5>-->
+<!--                <h5 class="mb-1"> {{ need.last_name }} </h5>-->
+<!--&lt;!&ndash;                <a href='{{ instance.get_absolute_url }}'></a>&ndash;&gt;-->
+<!--              <small>{{ need.created_at | prettydate }}</small>-->
+<!--            </div>-->
+<!--            <p class="mb-1">{{ need.phone }}</p>-->
+<!--            <p class="mb-1">{{ need.help_class }}</p>-->
+<!--            <small> {{ need.address }}</small>-->
+<!--        </div>-->
+<!--                  <div class="col-sm-3">-->
+<!--                      <form action="" method="post">-->
+<!--              <div class="btn-group btnclass" role="group" aria-label="Basic example">-->
 
-              </div>
-                          </form>
-                  </div>
-        </div>
-          </a>
-                 {% endfor %}
-        </div>
+
+
+<!--                  <button type="button" class="btn btn-secondary groupbtn">Help</button>-->
+<!--                  <button type="button" class="btn btn-secondary groupbtn">Delete</button>-->
+
+<!--              </div>-->
+<!--                          </form>-->
+<!--                  </div>-->
+<!--        </div>-->
+<!--          </a>-->
+<!--                 {% endfor %}-->
+<!--        </div>-->
 
     </div>
-    <div class="col-md-3">
 
-    </div>
   </div>
 </div>
 
@@ -138,6 +193,22 @@
 
                 let phone = document.getElementById("id_phone");
                 phone.value = "{{ obj.phone }}";
+
+
+<!--function displayQuantityForm() {-->
+<!--{% load crispy_forms_tags %}-->
+<!--  var form = ' {{ quantityForm|crispy }} {% csrf_token %} {{ form.as_p }} ';-->
+<!--  var formContainer = document.getElementById("formContainer");-->
+<!--  formContainer.innerHTML = form;-->
+
+<!--}-->
+
+<!--function hide() {-->
+<!--  var row = document.getElementById("hiderow");-->
+<!--  row.style.display = "none";-->
+<!--}-->
+
+
 
 <!--function help() {-->
 <!--    if (!need.is_helped) {-->

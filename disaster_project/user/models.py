@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 
 class User(AbstractUser):
@@ -39,15 +40,18 @@ class HelpNeed(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    quantity = models.IntegerField(default=0, blank=False, null=True)
+    quantity = models.PositiveIntegerField(default=1, blank=False, null=True)
     help_class = models.CharField(max_length=20, choices=Help_Class, blank=False, null=True)
     user_type = models.CharField(max_length=20, choices=User_Type, blank=False, null=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
 
+    def clean(self):
+        if self.quantity == 0:
+            raise ValidationError("Quantity cannot be zero.")
 
-# --------------- Rawan -------------------
+
 
 Volunteer_Field = (
     ('food','Provide Food'),
@@ -74,9 +78,9 @@ clothes_category = (
 )
 
 sizes = (
-    ('newborns', '0-1'),
-    ('babies','1-5'),
-    ('kids', '5-10'),
+    ('newborns', 'Age 0-1 '),
+    ('babies','Age 1-5'),
+    ('kids', 'Age 5-10'),
     ('xs', 'XS'),
     ('s', 'S'),
     ('m', 'M'),
