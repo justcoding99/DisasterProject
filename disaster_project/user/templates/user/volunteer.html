@@ -116,6 +116,25 @@ td {
       {% endfor %}
 
    </table>
+   {% if needs.has_other_pages %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if needs.has_previous %}
+              <a href="?page=1">&laquo; first</a>
+              <a href="?page={{ needs.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current-page">
+              Page {{ needs.number }} of {{ needs.paginator.num_pages }}.
+            </span>
+
+            {% if needs.has_next %}
+              <a href="?page={{ needs.next_page_number }}">next</a>
+              <a href="?page={{ needs.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
 
 
 

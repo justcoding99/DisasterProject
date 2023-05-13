@@ -78,19 +78,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'disaster_project.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'djongo',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb://localhost:27017'
-
+            'host': 'mongodb://localhost:27017',
+            'host': 'localhost',
+            'port': 27017,
+            'username': 'root',
+            'password': 'example',
         }
     }
 }
+
+
 
 
 

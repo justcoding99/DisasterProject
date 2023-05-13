@@ -6,6 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.paginator import Paginator
 # Create your views here.
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -134,8 +135,13 @@ def help_need_list(request):
 
 
 
+
+
 def volunteer_view(request):
     needs = HelpNeed.objects.all().order_by('-created_at')
+    paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     form = VolunteerForm(request.POST or None)
     quantityForm = QuantityForm(request.POST or None)
     if request.method == "POST":
@@ -151,7 +157,9 @@ def volunteer_view(request):
             form.save()
         else:
             print(form.errors)
-    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": needs, "quantityForm": quantityForm})
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": page_obj, "quantityForm": quantityForm})
+
+
 
 def firstaid_view(request):
     return render(request=request, template_name="user/firstaid.html")
