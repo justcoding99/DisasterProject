@@ -39,8 +39,8 @@ class HelpNeed(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     quantity = models.PositiveIntegerField(default=1, blank=False, null=True)
+    original_quantity = models.PositiveIntegerField(editable=False, blank=False, null=True)
     help_class = models.CharField(max_length=20, choices=Help_Class, blank=False, null=True)
     user_type = models.CharField(max_length=20, choices=User_Type, blank=False, null=True)
 
@@ -50,6 +50,11 @@ class HelpNeed(models.Model):
     def clean(self):
         if self.quantity == 0:
             raise ValidationError("Quantity cannot be zero.")
+
+    def save(self, *args, **kwargs):
+        if not self.original_quantity:
+            self.original_quantity = self.quantity
+        super().save(*args, **kwargs)
 
 
 

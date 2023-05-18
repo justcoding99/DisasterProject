@@ -20,6 +20,8 @@ from django.contrib.auth import get_user_model
 from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm, ReadyForm, \
     VolunteerRequestForm, ClothesRequestForm, VolunteerClothesRequestForm, QuantityForm
 from django.http import JsonResponse
+from pymongo import MongoClient
+from django.core.paginator import Paginator
 
 
 
@@ -134,8 +136,31 @@ def help_need_list(request):
 
 
 
+# def volunteer_view(request):
+#     needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at')
+#     form = VolunteerForm(request.POST or None)
+#     quantityForm = QuantityForm(request.POST or None)
+#     if request.method == "POST":
+#         if form.is_valid():
+#             first_name = request.POST['first_name']
+#             last_name = request.POST['last_name']
+#             phone = request.POST['phone']
+#             address = request.POST['address']
+#             volunteer_field = request.POST['volunteer_field']
+#             vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address=address,
+#                                            volunteer_field=volunteer_field)
+#             messages.success(request, 'Data has been submitted')
+#             form.save()
+#         else:
+#             print(form.errors)
+#
+#     return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": needs, "quantityForm": quantityForm})
+
 def volunteer_view(request):
-    needs = HelpNeed.objects.all().order_by('-created_at')
+    needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at')
+    paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     form = VolunteerForm(request.POST or None)
     quantityForm = QuantityForm(request.POST or None)
     if request.method == "POST":
@@ -151,8 +176,7 @@ def volunteer_view(request):
             form.save()
         else:
             print(form.errors)
-    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": needs, "quantityForm": quantityForm})
-
+    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": page_obj, "quantityForm": quantityForm})
 def firstaid_view(request):
     return render(request=request, template_name="user/firstaid.html")
 
@@ -312,6 +336,7 @@ def volunteer_requests(request):
 @login_required
 def change_status(request, pk):
     instance = get_object_or_404(HelpNeed, pk=pk)
+    instance.quantity = 0
     instance.is_helped = True
     instance.helper_id = request.user
     instance.save()
@@ -319,23 +344,48 @@ def change_status(request, pk):
     return redirect('user:volunteer')
 
 
-# def update_item(request):
-#     if request.method == 'POST':
-#         form = QuantityForm(request.POST)
-#         if form.is_valid():
-#             item = HelpNeed.objects.create(
-#                 column1=form.cleaned_data['column1'],
-#                 column2=form.cleaned_data['column2'],
-#             )
-#             return HttpResponseRedirect(request.path_info)
-#
+# def update_quantity(request):
+    # item = get_object_or_404(HelpNeed, pk=pk)
+    # if request.method == 'POST':
+    #     new_quantity = request.POST.get('quantity')
+    #     item.quantity = new_quantity
+    #     item.save()
+    #     messages.info(request, f"Volunteer, Thank You For Your Help")
+    #     return redirect('user:volunteer')
+@login_required
+def update_quantity(request, pk):
+    post = get_object_or_404(HelpNeed, pk=pk)
 
-# def update_status(request, id):
-#     obj = HelpNeed.objects.get(id=id)
-#     if request.method == "POST":
-#         obj.update(is_helped=request.POST[True])
-#     context = {
-#         "object": obj
-#     }
-#     return render(request=request, template_name="user/volunteer_requests.html", context={"theobj":obj})
+    if request.method == 'POST':
+        newquantity = int(request.POST.get('quantity'))
+        post.quantity = post.quantity - newquantity
+        if post.quantity == 0:
+            post.is_helped = True
+            post.helper_id = request.user
+            post.save()
+            messages.info(request, "Volunteer, Thank You For Your Help")
+            return redirect('user:volunteer')
+        else:
+            post.save()
+            messages.info(request, "Volunteer, Thank You For Your Help")
+            return redirect('user:volunteer')
 
+def helped_archive(request):
+    client = MongoClient('mongodb://localhost:27017')
+
+    # Access the desired database and collection
+    db = client['djongo']
+    collection = db['user_helpneed']
+
+    # Prepare and execute the query
+    query = {"is_helped": True}
+    posts = collection.find(query)
+
+    # Close the MongoDB connection
+    client.close()
+
+    # Pass the query results to the template
+    context = {
+        'posts': posts
+    }
+    return render(request, 'user/helped_archive.html', context)
