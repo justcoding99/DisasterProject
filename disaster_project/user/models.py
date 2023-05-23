@@ -4,6 +4,8 @@ from django.db import models
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from djongo import models
+
 
 
 class User(AbstractUser):
@@ -35,7 +37,7 @@ class HelpNeed(models.Model):
     description = models.CharField(max_length=255, blank=False, null=True)
 
     is_helped = models.BooleanField(default=False)
-    helper = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    helpers = models.ManyToManyField(User)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

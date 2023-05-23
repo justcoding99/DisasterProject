@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Volunteer
+from .models import User
 
 # Register your models here.
-admin.register(Volunteer)
+admin.register(User)

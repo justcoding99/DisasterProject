@@ -1,8 +1,7 @@
-
 {% extends "user/base.html" %}
 {% load custom_tags %}
 {% load crispy_forms_tags %}
-
+{% load static %}
 <head>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
@@ -69,148 +68,136 @@ td {
   border: 1px solid #ddd;
   padding: 8px;
 }
-}
+
 
 .hidden {
     display: none;
 }
 
+.progress {
+  height: 20px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #286090;;
+  width: 100%; /* Set initial width to 100% */
+  position: relative;
+}
+
+
+
+
     </style>
-
-<!--<div class="container">-->
-<!--  <div class="row">-->
-<!--    <div class="col-md-12">-->
-<!--        <p class="lead 1" style="text-align:left">Help List</p>-->
-
-<!--&lt;!&ndash;        <table>&ndash;&gt;-->
-<!--&lt;!&ndash;    <tr>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>ID</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>First Name</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Last Name</th>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;      <th>Phone</th>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Address</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Help Class</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Quantity</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Created At</th>&ndash;&gt;-->
-<!--&lt;!&ndash;      <th>Action</th>&ndash;&gt;-->
-<!--&lt;!&ndash;    </tr>&ndash;&gt;-->
-<!--&lt;!&ndash;    {% for need in needs %}&ndash;&gt;-->
-<!--&lt;!&ndash;      <tr id="hiderow">&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.id }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.first_name }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.last_name }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;        <td>{{ need.phone }}</td>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.address }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.help_class }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.quantity }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>{{ need.created_at | prettydate }}</td>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;        <td> <button onclick="displayQuantityForm()">Help 1 </button>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;            <div id="formContainer"></div>&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;        </td>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;        <td>  <a class="btn btn-primary" href="{% url 'user:change_status' pk=need.pk %}" role="button" onclick="hide()">Help</a> </td>&ndash;&gt;-->
-<!--&lt;!&ndash;      </tr>&ndash;&gt;-->
-<!--&lt;!&ndash;      {% endfor %}&ndash;&gt;-->
-
-<!--&lt;!&ndash;   </table>&ndash;&gt;-->
-<!--   {% if needs.has_other_pages %}-->
-<!--        <div class="pagination">-->
-<!--          <span class="step-links">-->
-<!--            {% if needs.has_previous %}-->
-<!--              <a href="?page=1">&laquo; first</a>-->
-<!--              <a href="?page={{ needs.previous_page_number }}">previous</a>-->
-<!--            {% endif %}-->
-
-<!--            <span class="current-page">-->
-<!--              Page {{ needs.number }} of {{ needs.paginator.num_pages }}.-->
-<!--            </span>-->
-
-<!--            {% if needs.has_next %}-->
-<!--              <a href="?page={{ needs.next_page_number }}">next</a>-->
-<!--              <a href="?page={{ needs.paginator.num_pages }}">last &raquo;</a>-->
-<!--            {% endif %}-->
-<!--          </span>-->
-<!--        </div>-->
-<!--      {% endif %}-->
-
-<!--    </div>-->
-
-<!--  </div>-->
-<!--</div>-->
 
 <div class="container">
   <div class="row">
     <div class="col-md-12">
-        <p class="lead 1" style="text-align:left">Help List</p>
-        <a class="btn btn-primary" style="float: right;" role="button" href="/helped_archive">View Helped Archive</a>
+      <p class="lead 1" style="text-align:left">Help List</p>
+<!--      <a class="btn btn-primary" style="float: right;" role="button" href="/helped_archive">View Helped Archive</a>-->
 
-    <table>
-    <tr>
-      <th>ID</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-<!--      <th>Phone</th>-->
-      <th>Address</th>
-      <th>Help Class</th>
-      <th>Quantity</th>
-      <th>Created At</th>
-      <th>Action</th>
-    </tr>
-    {% for need in needs %}
-      <tr id="hiderow">
-        <td>{{ need.id }}</td>
-        <td>{{ need.first_name }}</td>
-        <td>{{ need.last_name }}</td>
-<!--        <td>{{ need.phone }}</td>-->
-        <td>{{ need.address }}</td>
-        <td>{{ need.help_class }}</td>
-        <td id="quantity_{{ need.id }}">{{ need.quantity }}</td>
-        <td>{{ need.created_at | prettydate }}</td>
-        <td>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Address</th>
+          <th>Help Class</th>
+          <th>Quantity</th>
+          <th>Created At</th>
+          <th>Action</th>
+        </tr>
+        {% for need in needs %}
+        <tr id="hiderow">
+          <td>{{ need.id }}</td>
+          <td>{{ need.first_name }}</td>
+          <td>{{ need.last_name }}</td>
+          <td>{{ need.address }}</td>
+          <td>{{ need.help_class }}</td>
+          <td id="quantity_{{ need.id }}">{{ need.quantity }}</td>
+          <td>{{ need.created_at | prettydate }}</td>
+          <td>
             <button class="btn btn-primary" id="btn_{{ need.id }}" onclick="toggleForm('{{ need.id }}'); event.preventDefault();">Help</button>
+          </td>
 
-        </td>
-
-        <td>
-               <form method="POST" class="hidden" action="{% url 'user:update_quantity' pk=need.id %}" id="form_{{ need.id }}" onsubmit="return validateQuantity({{ need.quantity }});">
-                    {% csrf_token %}
-                    {{ form.as_p }}
-                    <label>Quantity:</label>
-                    <input type="number" id="id_quantity" name="quantity" min="0" max="{{ need.quantity }}" value="{{ need.quantity }}">
-                    <button type="submit" class="btn btn-primary">Update</button>
-               </form>
-        </td>
-
-
-<!--    <td>  <a class="btn btn-primary" href="{% url 'user:change_status' pk=need.pk %}" role="button" onclick="hide()">Help</a> </td>-->
-      </tr>
-      {% endfor %}
-
-   </table>
-        {% if needs.has_other_pages %}
-        <div class="pagination">
-          <span class="step-links">
-            {% if needs.has_previous %}
-              <a href="?page=1">&laquo; first</a>
-              <a href="?page={{ needs.previous_page_number }}">previous</a>
-            {% endif %}
-
-            <span class="current-page">
-              Page {{ needs.number }} of {{ needs.paginator.num_pages }}.
-            </span>
-
-            {% if needs.has_next %}
-              <a href="?page={{ needs.next_page_number }}">next</a>
-              <a href="?page={{ needs.paginator.num_pages }}">last &raquo;</a>
-            {% endif %}
-          </span>
-        </div>
-      {% endif %}
-
-
+          <td>
+            <form method="POST" class="hidden" action="{% url 'user:update_quantity' pk=need.id %}" id="form_{{ need.id }}" onsubmit="return validateQuantity({{ need.quantity }});">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <label>Quantity:</label>
+              <input type="number" id="id_quantity_{{ need.id }}" name="quantity" min="0" max="{{ need.quantity }}" value="0" data-item-id="{{ need.id }}">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="progress-bar-{{ need.id }}"></div>
+              </div>
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
 </div>
+
+<script>
+  {% for need in needs %}
+  function updateProgressBar(itemId) {
+    var quantity = parseInt(document.getElementById('quantity_' + itemId).innerText);
+    var inputQuantity = parseInt(document.getElementById('id_quantity_' + itemId).value);
+    var progressBar = document.getElementById('progress-bar-' + itemId);
+    var progress = (quantity - inputQuantity) * 100 / quantity;
+    progressBar.style.width = progress + '%';
+  }
+
+  // Attach event listeners to input elements
+  var quantityInputs = document.querySelectorAll('[id^="id_quantity_"]');
+  quantityInputs.forEach(function(input) {
+    var itemId = input.getAttribute('data-item-id');
+    input.addEventListener('input', function() {
+      updateProgressBar(itemId);
+    });
+  });
+
+  // Initial update of the progress bars
+  {% for need in needs %}
+  updateProgressBar('{{ need.id }}');
+  {% endfor %}
+  {% endfor %}
+</script>
+
+
+
+
+   
+
+ </table>
+      {% if needs.has_other_pages %}
+      <div class="pagination">
+        <span class="step-links">
+          {% if needs.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ needs.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current-page">
+            Page {{ needs.number }} of {{ needs.paginator.num_pages }}.
+          </span>
+
+          {% if needs.has_next %}
+            <a href="?page={{ needs.next_page_number }}">next</a>
+            <a href="?page={{ needs.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+
+
+  </div>  
+</div>
+</div>
+
 
 
 <script>
@@ -238,6 +225,8 @@ function validateQuantity(maxQuantity) {
 
     return true;
 }
+
+
 </script>
 
 {% endblock %}

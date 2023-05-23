@@ -9,7 +9,7 @@
 
     <meta charset="UTF-8">
 {% block title %}
-    <title>My Helped Post Archive</title>
+    <title>My Supports</title>
 {% endblock %}
 
 
@@ -19,7 +19,11 @@
 
 
 <style>
-
+.lead{
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+}
 
 table {
   border-collapse: collapse;
@@ -42,9 +46,9 @@ td {
   padding: 8px;
 }
 
+
 </style>
 
-   <h1>Hi</h1>
 
 
 <div class="container">
@@ -60,25 +64,44 @@ td {
 <!--      <th>Phone</th>-->
       <th>Address</th>
       <th>Help Class</th>
-<!--      <th>Quantity</th>-->
-<!--      <th>Created At</th>-->
-      <th>Help Status</th>
+      <th>Quantity</th>
+      <th>Updated At</th>
+<!--      <th>Help Status</th>-->
     </tr>
     {% for post in posts %}
-      <tr>
+      <tr id="hiderow">
         <td>{{ post.id }}</td>
         <td>{{ post.first_name }}</td>
         <td>{{ post.last_name }}</td>
         <td>{{ post.address }}</td>
         <td>{{ post.help_class }}</td>
-<!--        <td>{{ post.quantity }}</td>-->
-<!--        <td>{{ post.created_at | prettydate }}</td>-->
-        <td>{{ post.is_helped }}</td>
+        <td>{{ post.quantity }}</td>
+        <td>{{ post.updated_at | prettydate }}</td>
+<!--        <td>{{ post.is_helped }}</td>-->
 
       </tr>
       {% endfor %}
 
    </table>
+         {% if posts.has_other_pages %}
+      <div class="pagination">
+        <span class="step-links">
+          {% if posts.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ posts.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current-page">
+            Page {{ posts.number }} of {{ posts.paginator.num_pages }}.
+          </span>
+
+          {% if posts.has_next %}
+            <a href="?page={{ posts.next_page_number }}">next</a>
+            <a href="?page={{ posts.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
 
 </div>
   </div>
