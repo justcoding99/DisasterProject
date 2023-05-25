@@ -5,4 +5,6 @@ db
 disaster_project/.env
 *.pyc
 .DS_Store
+venv
+settings.py
 myenv

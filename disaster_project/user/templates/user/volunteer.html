@@ -1,11 +1,18 @@
-
 {% extends "user/base.html" %}
 {% load custom_tags %}
+{% load crispy_forms_tags %}
+{% load static %}
+<head>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+
+
 
 {% block title %}
     <title>Disaster Recovery Website Hompage</title>
 {% endblock %}
 
+</head>
 
 {% block content %}
 <style>
@@ -38,115 +45,186 @@
   position: absolute;
   top: 5px;
   right: 5px;
-}
-    </style>
 
-{% load crispy_forms_tags %}
-<!--<h5>// This is Help-provider Homepage</h5>-->
-    <div class="section1light">
-         <div class="row">
-            <div class="col-sm-12">
-                <div class="jumbotron jumbotron-fluid">
-                  <div class="container">
-                    <h1 class="display-4">Your Help Is Appreciated</h1>
-<!--                    <p class="lead 1" style="text-align:left">Provide Food</p>-->
-<!--&lt;!&ndash;                    <p class="lead 2" style="text-align:center">Provide Transportation</p>&ndash;&gt;-->
-<!--                    <p class="lead 3" style="text-align:right">Provide Shelter</p>-->
-                  </div>
-                </div>
-            </div>
-        </div>
-   </div>
+ }
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 14px;
+  text-align: center;
+}
+
+th {
+  background-color: #abd4c6;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-transform: uppercase;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.progress {
+  height: 20px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #286090;;
+  width: 100%; /* Set initial width to 100% */
+  position: relative;
+}
+
+
+    </style>
 
 <div class="container">
   <div class="row">
-    <div class="col-md-9">
-        <p class="lead 1" style="text-align:left">Help List</p>
-       <div class="list-group">
-         {% for need in needs %}
+    <div class="col-md-12">
+      <p class="lead 1" style="text-align:left">Help List</p>
+<!--      <a class="btn btn-primary" style="float: right;" role="button" href="/helped_archive">View Helped Archive</a>-->
 
-          <a href="#" class="list-group-item list-group-item-action alist" aria-current="true">
-              <div class="row">
-    <div class="col-sm-9">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1"> {{ need.first_name }} </h5>
-                <h5 class="mb-1"> {{ need.last_name }} </h5>
-<!--                <a href='{{ instance.get_absolute_url }}'></a>-->
-              <small>{{ need.created_at | prettydate }}</small>
-            </div>
-            <p class="mb-1">{{ need.phone }}</p>
-            <p class="mb-1">{{ need.help_class }}</p>
-            <small> {{ need.address }}</small>
-        </div>
-                  <div class="col-sm-3">
-                      <form action="" method="post">
-              <div class="btn-group btnclass" role="group" aria-label="Basic example">
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Address</th>
+          <th>Help Class</th>
+          <th>Quantity</th>
+          <th>Created At</th>
+          <th>Action</th>
+        </tr>
+        {% for need in needs %}
+        <tr id="hiderow">
+          <td>{{ need.id }}</td>
+          <td>{{ need.first_name }}</td>
+          <td>{{ need.last_name }}</td>
+          <td>{{ need.address }}</td>
+          <td>{{ need.help_class }}</td>
+          <td id="quantity_{{ need.id }}">{{ need.quantity }}</td>
+          <td>{{ need.created_at | prettydate }}</td>
+          <td>
+            <button class="btn btn-primary" id="btn_{{ need.id }}" onclick="toggleForm('{{ need.id }}'); event.preventDefault();">Help</button>
+          </td>
 
-
-
-                  <button type="button" class="btn btn-secondary groupbtn">Help</button>
-                  <button type="button" class="btn btn-secondary groupbtn">Delete</button>
-
+          <td>
+            <form method="POST" class="hidden" action="{% url 'user:update_quantity' pk=need.id %}" id="form_{{ need.id }}" onsubmit="return validateQuantity({{ need.quantity }});">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <label>Quantity:</label>
+              <input type="number" id="id_quantity_{{ need.id }}" name="quantity" min="0" max="{{ need.quantity }}" value="0" data-item-id="{{ need.id }}">
+              <div class="progress">
+                <div class="progress-bar" role="progressbar" id="progress-bar-{{ need.id }}"></div>
               </div>
-                          </form>
-                  </div>
-        </div>
-          </a>
-                 {% endfor %}
-        </div>
-
-    </div>
-    <div class="col-md-3">
-
+              <button type="submit" class="btn btn-primary">Update</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
     </div>
   </div>
 </div>
 
-<!--{% load crispy_forms_tags %}-->
-<!--    <div class="section1light">-->
-<!--         <div class="row">-->
-<!--            <div class="col-sm-12">-->
-<!--                <div class="jumbotron jumbotron-fluid">-->
-<!--                  <div class="container">-->
-<!--                    <h1 class="display-4">How To Volunteer </h1>-->
-<!--                    <p class="lead 1" style="text-align:left">Provide Food</p>-->
-<!--                    <p class="lead 2" style="text-align:center">Provide Transportation</p>-->
-<!--                    <p class="lead 3" style="text-align:right">Provide Shelter</p>-->
-<!--                  </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--   </div>-->
+<script>
+  {% for need in needs %}
+  function updateProgressBar(itemId) {
+    var quantity = parseInt(document.getElementById('quantity_' + itemId).innerText);
+    var inputQuantity = parseInt(document.getElementById('id_quantity_' + itemId).value);
+    var progressBar = document.getElementById('progress-bar-' + itemId);
+    var progress = (quantity - inputQuantity) * 100 / quantity;
+    progressBar.style.width = progress + '%';
+  }
 
-<!--    <form method="POST" action="">-->
-<!--     {{ volunteer_form|crispy }} {% csrf_token %}-->
-<!--        {{ form.as_p }}-->
-<!--        <button class="btn btn-primary submitform" type="submit">Submit Form</button>-->
-<!--     </form>-->
+  // Attach event listeners to input elements
+  var quantityInputs = document.querySelectorAll('[id^="id_quantity_"]');
+  quantityInputs.forEach(function(input) {
+    var itemId = input.getAttribute('data-item-id');
+    input.addEventListener('input', function() {
+      updateProgressBar(itemId);
+    });
+  });
+
+  // Initial update of the progress bars
+  {% for need in needs %}
+  updateProgressBar('{{ need.id }}');
+  {% endfor %}
+  {% endfor %}
+</script>
+
+
+
+
+   
+
+ </table>
+      {% if needs.has_other_pages %}
+      <div class="pagination">
+        <span class="step-links">
+          {% if needs.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ needs.previous_page_number }}">previous</a>
+          {% endif %}
+
+          <span class="current-page">
+            Page {{ needs.number }} of {{ needs.paginator.num_pages }}.
+          </span>
+
+          {% if needs.has_next %}
+            <a href="?page={{ needs.next_page_number }}">next</a>
+            <a href="?page={{ needs.paginator.num_pages }}">last &raquo;</a>
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+
+
+  </div>  
+</div>
+</div>
+
+
 
 <script>
-                let fname = document.getElementById("id_first_name");
-                fname.value = "{{ user.first_name }}";
+function toggleForm(itemId) {
+    var form = document.getElementById("form_" + itemId);
+    var quantityElement = document.getElementById("quantity_" + itemId);
+    var quantity = parseInt(quantityElement.innerText);
+    form.classList.toggle("hidden");
 
-                let lname = document.getElementById("id_last_name");
-                lname.value = "{{ user.last_name }}";
+    }
 
-                let username = document.getElementById("id_username");
-                username.value = "{{ user.username }}";
+function validateQuantity(maxQuantity) {
+    var quantityInput = document.getElementById("id_quantity");
+    var enteredQuantity = parseInt(quantityInput.value);
 
-                let email = document.getElementById("id_email");
-                email.value = "{{ user.email }}";
+    if (enteredQuantity > maxQuantity) {
+        var errorMessage = "Value should be less than " + maxQuantity + ".";
+        quantityInput.setCustomValidity(errorMessage);
+        quantityInput.reportValidity(); // Display the custom error message
+        return false; // Prevent form submission
+    }
 
-                let phone = document.getElementById("id_phone");
-                phone.value = "{{ obj.phone }}";
+    // Clear the custom error message
+    quantityInput.setCustomValidity("");
+
+    return true;
+}
 
 
-<!--function help() {-->
-<!--    if (!need.is_helped) {-->
-<!--        need.is_helped.value = True;-->
-<!--        console.log("Thank You For Your Help")-->
-<!--    }-->
-<!--  }-->
 
 
 </script>

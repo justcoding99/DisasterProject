@@ -86,6 +86,11 @@ DATABASES = {
         'NAME': 'djongo',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
+           'host': 'localhost',
+            'port': 27017,
+            'username': 'root',
+            'password': 'example',
+
             'host': 'mongodb://localhost:27017',
             'host': 'localhost',
             'port': 27017,
@@ -121,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Istanbul'
 
 USE_I18N = True
 
