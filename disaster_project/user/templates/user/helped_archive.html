@@ -64,19 +64,19 @@ td {
 <!--      <th>Phone</th>-->
       <th>Address</th>
       <th>Help Class</th>
-      <th>Quantity</th>
+      <th>Quantity Provided</th>
       <th>Updated At</th>
 <!--      <th>Help Status</th>-->
     </tr>
     {% for post in posts %}
       <tr id="hiderow">
-        <td>{{ post.id }}</td>
-        <td>{{ post.first_name }}</td>
-        <td>{{ post.last_name }}</td>
-        <td>{{ post.address }}</td>
-        <td>{{ post.help_class }}</td>
+        <td>{{ post.help_need.id }}</td>
+        <td>{{ post.help_need.first_name }}</td>
+        <td>{{ post.help_need.last_name }}</td>
+        <td>{{ post.help_need.address }}</td>
+        <td>{{ post.help_need.help_class }}</td>
         <td>{{ post.quantity }}</td>
-        <td>{{ post.updated_at | prettydate }}</td>
+        <td>{{ post.help_need.updated_at | prettydate }}</td>
 <!--        <td>{{ post.is_helped }}</td>-->
 
       </tr>
