@@ -1,0 +1,125 @@
+
+{% extends "user/base.html" %}
+{% load custom_tags %}
+
+{% block title %}
+    <title>Users List Page</title>
+{% endblock %}
+
+
+{% block content %}
+<style>
+.jumbotron.jumbotron-fluid{
+    text-align: center;
+    background: none;
+}
+.lead{
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+}
+.submitform{
+    margin: auto;
+    display: block;
+    padding: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-size: 14px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-transform: uppercase;
+}
+
+td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+    </style>
+
+
+{% load crispy_forms_tags %}
+<h5>// This is ADMIN Homepage</h5>
+    <div class="section1light">
+         <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron jumbotron-fluid">
+                  <div class="container">
+                    
+                  </div>
+                </div>
+            </div>
+        </div>
+   </div>
+
+
+   <table>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>First Name</th>
+      <th>Last Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Last Login</th>
+      <th>Is Superuser</th>
+      <th>Is Active</th>
+    </tr>
+    {% for user in users %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ user.last_login }}</td>
+        <td>{{ user.is_superuser }}</td>
+        <td>{{ user.is_active }}</td>
+      </tr>
+      {% endfor %}
+
+   </table>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+       <div class="list-group">
+         {% for need in needs %}
+          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1"> {{ need.name }} </h5>
+              <small>{{ need.created_at | prettydate }}</small>
+            </div>
+            <p class="mb-1">{{ need.phone }}</p>
+            <p class="mb-1">{{ need.description }}</p>
+            <small> {{ need.address }}</small>
+          </a>
+                 {% endfor %}
+        </div>
+
+    </div>
+    <div class="col-md-3">
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

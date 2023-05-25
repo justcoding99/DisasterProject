@@ -7,3 +7,4 @@ disaster_project/.env
 .DS_Store
 venv
 settings.py
+myenv
