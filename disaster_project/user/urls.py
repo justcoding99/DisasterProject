@@ -16,6 +16,8 @@ urlpatterns = [
     path("activate/<str:uidb64>/<str:token>", views.activate, name='activate'),
     path('first_aid', views.firstaid_view, name='first_aid'),
     path('profile', views.profile_view, name='profile'),
+    path('admin', views.admin_view, name='admin'),
+    path('userslist', views.userslist_view, name='userslist'),
     path('food_form', views.food_form_view, name='food_form'),
     path('shelter_form', views.shelter_form_view, name='shelter_form'),
     path('medical_form', views.medical_form_view, name='medical_form'),
@@ -27,5 +29,6 @@ urlpatterns = [
     # path('update_quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('update-quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('helped_archive', views.helped_archive, name='helped_archive'),
+
 
 ]
