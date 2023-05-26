@@ -37,7 +37,7 @@ class HelpNeed(models.Model):
     description = models.CharField(max_length=255, blank=False, null=True)
 
     is_helped = models.BooleanField(default=False)
-    helpers = models.ManyToManyField(User)
+    helpers = models.ManyToManyField(User, through='HelpNeedHelper')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -99,3 +99,14 @@ sizes = (
 class ClothesRequest(HelpNeed):
     category = models.CharField(max_length=50, choices=clothes_category)
     size = models.CharField(max_length=50, choices=sizes)
+
+class HelpNeedHelper(models.Model):
+    help_need = models.ForeignKey(HelpNeed, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.help_need}"
+
+    class Meta:
+        unique_together = ('help_need', 'user')

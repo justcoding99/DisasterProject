@@ -13,7 +13,8 @@ from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
-from .models import HelpNeed, Volunteer, User
+
+from .models import HelpNeed, Volunteer, HelpNeedHelper
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
@@ -347,10 +348,15 @@ def update_quantity(request, pk):
 
     if request.method == 'POST':
         newquantity = int(request.POST.get('quantity'))
-        post.quantity = post.quantity - newquantity
-
+        quantity_change = post.quantity - newquantity
+        post.quantity = quantity_change
         post.helpers.add(request.user)
         post.save()
+
+        # Update the quantity for the current user in the through model
+        helper = HelpNeedHelper.objects.get(help_need=post, user=request.user)
+        helper.quantity += newquantity
+        helper.save()
 
         if post.quantity == 0:
             post.is_helped = True
@@ -375,12 +381,14 @@ def update_quantity(request, pk):
 
 @login_required
 def helped_archive(request):
-    posts = HelpNeed.objects.filter(
-        helpers__id=request.user.id
-    ).order_by('-updated_at')
+    posts = HelpNeedHelper.objects.filter(
+        user=request.user
+    ).order_by('-help_need__updated_at')
+
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     context = {
         'posts': page_obj
     }
