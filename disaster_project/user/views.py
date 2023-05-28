@@ -136,7 +136,7 @@ def help_need_list(request):
 
 
 def volunteer_view(request):
-    needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at')
+    needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at').exclude(volunteer=request.user)
     paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -170,14 +170,14 @@ def profile_view(request):
 
 def food_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer", 'volunteer': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer"})
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer", 'volunteer': request.user})
         else:
-            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer"})
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "food", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type': "victim"})
@@ -191,15 +191,15 @@ def food_form_view(request):
         return render(request=request, template_name="user/food_form.html", context={"ready_form":form})
 def shelter_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer", 'volunteer_requests': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer"})
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer", 'volunteer': request.user})
 
         else:
-            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer"})
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ReadyForm(request.POST or None, initial={'help_class': "shelter", 'user_type': "victim"})
@@ -213,14 +213,14 @@ def shelter_form_view(request):
         return render(request=request, template_name="user/shelter_form.html", context={"ready_form": form})
 def medical_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer"})
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
         else:
-            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer"})
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type': "victim"})
@@ -235,14 +235,14 @@ def medical_form_view(request):
 
 def hygiene_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer", 'volunteer': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer"})
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer", 'volunteer': request.user})
         else:
-            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer"})
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ReadyForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "victim"})
@@ -257,14 +257,14 @@ def hygiene_form_view(request):
 
 def clothes_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer"})
+        form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer", 'volunteer': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer"})
+                form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer", 'volunteer': request.user})
         else:
-            form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer"})
+            form = VolunteerClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ClothesRequestForm(request.POST or None, initial={'help_class': "clothes", 'user_type': "victim"})
@@ -279,14 +279,14 @@ def clothes_form_view(request):
 
 def heaters_form_view(request):
     if request.user.is_authenticated:
-        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer", 'volunteer': request.user})
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
                 messages.info(request, f"Volunteer, Your help request has been received.")
-                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer"})
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer", 'volunteer': request.user})
         else:
-            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer"})
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer", 'volunteer': request.user})
         return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
     else:
         form = ReadyForm(request.POST or None, initial={'help_class': "heating", 'user_type': "victim"})
@@ -302,14 +302,14 @@ def heaters_form_view(request):
 def request_help_view(request):
     return render(request=request, template_name="user/index.html")
 def volunteer_requests(request):
-    form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer"})
+    form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer", 'volunteer': request.user})
     if request.method == 'POST':
         if form.is_valid():
             form.save()
             messages.info(request, f"Volunteer, Your help request has been received.")
             return redirect("user:volunteer_requests")
     else:
-        form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer"})
+        form = VolunteerRequestForm(request.POST or None, initial={'user_type': "volunteer"})
     return render(request=request, template_name="user/volunteer_requests.html")
 
 @login_required
@@ -373,3 +373,13 @@ def helped_archive(request):
         'posts': page_obj
     }
     return render(request, 'user/helped_archive.html', context)
+
+def my_requests(request):
+    posts = HelpNeed.objects.filter(volunteer= request.user).order_by('-created_at')
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {
+        'posts': page_obj
+    }
+    return render(request, 'user/my_requests.html', context)

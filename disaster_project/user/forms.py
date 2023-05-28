@@ -97,7 +97,11 @@ class VolunteerRequestForm(forms.ModelForm):
 
     class Meta:
         model = HelpNeed
-        fields = ("first_name","last_name", "address", "phone","lat", "lon", "quantity", "help_class", "user_type")
+        fields = ("first_name","last_name", "address", "phone","lat", "lon", "quantity", "help_class", "user_type", "volunteer")
+
+        widgets = {
+            'volunteer': forms.HiddenInput(),
+        }
 
 class VolunteerClothesRequestForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.HiddenInput())
@@ -109,11 +113,16 @@ class VolunteerClothesRequestForm(forms.ModelForm):
     user_type = forms.CharField(max_length=20, widget=forms.HiddenInput())
     help_class = forms.CharField(max_length=20, widget=forms.HiddenInput())
 
+
     class Meta:
         model = ClothesRequest
         fields = (
         "first_name", "last_name", "phone", "address", "lat", "lon", "quantity", "help_class", "user_type", "category",
-        "size")
+        "size", "volunteer")
+
+        widgets = {
+            'volunteer': forms.HiddenInput(),
+        }
 
 class QuantityForm(forms.ModelForm):
     class Meta:

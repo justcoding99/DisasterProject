@@ -27,5 +27,6 @@ urlpatterns = [
     # path('update_quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('update-quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('helped_archive', views.helped_archive, name='helped_archive'),
+    path('my_requests', views.my_requests, name='my_requests'),
 
 ]
