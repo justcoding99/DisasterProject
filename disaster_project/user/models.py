@@ -3,6 +3,9 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
+from djongo import models
+
 
 
 class User(AbstractUser):
@@ -34,20 +37,28 @@ class HelpNeed(models.Model):
     description = models.CharField(max_length=255, blank=False, null=True)
 
     is_helped = models.BooleanField(default=False)
-    helper = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    helpers = models.ManyToManyField(User, through='HelpNeedHelper')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    quantity = models.IntegerField(default=0, blank=False, null=True)
+    quantity = models.PositiveIntegerField(default=1, blank=False, null=True)
+    original_quantity = models.PositiveIntegerField(editable=False, blank=False, null=True)
     help_class = models.CharField(max_length=20, choices=Help_Class, blank=False, null=True)
     user_type = models.CharField(max_length=20, choices=User_Type, blank=False, null=True)
 
     def __str__(self):
         return self.first_name + " " + self.last_name
 
+    def clean(self):
+        if self.quantity == 0:
+            raise ValidationError("Quantity cannot be zero.")
 
-# --------------- Rawan -------------------
+    def save(self, *args, **kwargs):
+        if not self.original_quantity:
+            self.original_quantity = self.quantity
+        super().save(*args, **kwargs)
+
+
 
 Volunteer_Field = (
     ('food','Provide Food'),
@@ -74,9 +85,9 @@ clothes_category = (
 )
 
 sizes = (
-    ('newborns', '0-1'),
-    ('babies','1-5'),
-    ('kids', '5-10'),
+    ('newborns', 'Age 0-1 '),
+    ('babies','Age 1-5'),
+    ('kids', 'Age 5-10'),
     ('xs', 'XS'),
     ('s', 'S'),
     ('m', 'M'),
@@ -88,3 +99,14 @@ sizes = (
 class ClothesRequest(HelpNeed):
     category = models.CharField(max_length=50, choices=clothes_category)
     size = models.CharField(max_length=50, choices=sizes)
+
+class HelpNeedHelper(models.Model):
+    help_need = models.ForeignKey(HelpNeed, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.help_need}"
+
+    class Meta:
+        unique_together = ('help_need', 'user')

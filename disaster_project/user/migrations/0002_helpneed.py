@@ -17,6 +17,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('phone', models.CharField(max_length=30)),
                 ('address', models.CharField(max_length=255)),
+                ('is_helped', models.BooleanField(default=False)),
             ],
         ),
     ]

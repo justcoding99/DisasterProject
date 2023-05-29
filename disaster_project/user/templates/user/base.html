@@ -66,7 +66,7 @@
 
                 {% if user.is_authenticated %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/profile">Welcome, {{ user.username }}</a>
+                    <a class="nav-link" href="/profile">Welcome, {{ user.username }} </a>
                 </li>
                 {% if user.username == "admin" %}
                 <li class="nav-item">
@@ -104,13 +104,17 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="volunteer_requests">Request Help</a>
+                    <a class="nav-link" href="/">Request Help</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/helped_archive">My Supports</a>
                 </li>
                 {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="/logout">Logout</a>
                 </li>
                 {% endif %}
+
             </ul>
             {% if not user.is_authenticated %}
             <ul class="nav navbar-nav navbar-right">
@@ -234,6 +238,10 @@
 <script src="/static/user/js-first-aid/custom.js"></script>
 <script src="{% static 'user/leaflet.js' %}"></script>
 <script src="{% static 'user/marker/leaflet.markercluster.js' %}"></script>
+
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>-->
 
 </body>
 </html>
