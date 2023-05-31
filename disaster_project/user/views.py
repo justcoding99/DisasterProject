@@ -383,3 +383,9 @@ def my_requests(request):
         'posts': page_obj
     }
     return render(request, 'user/my_requests.html', context)
+
+def delete_request(request, pk):
+    instance = get_object_or_404(HelpNeed, pk=pk)
+    instance.delete()
+    messages.info(request, f"Your request has been deleted successfully ")
+    return redirect('user:my_requests')

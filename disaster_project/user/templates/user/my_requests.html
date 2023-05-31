@@ -56,39 +56,136 @@ td {
     <div class="col-md-12">
         <p class="lead 1" style="text-align:left">My Requests</p>
 
+<!--<table>-->
+<!--    <tr>-->
+<!--      <th>ID</th>-->
+<!--      <th>First Name</th>-->
+<!--      <th>Last Name</th>-->
+<!--&lt;!&ndash;      <th>Phone</th>&ndash;&gt;-->
+<!--      <th>Address</th>-->
+<!--      <th>Help Class</th>-->
+<!--      <th>Quantity</th>-->
+<!--      <th>Created At</th>-->
+<!--&lt;!&ndash;      <th>Help Status</th>&ndash;&gt;-->
+<!--    </tr>-->
+<!--    {% for post in posts %}-->
+<!--      <tr id="hiderow">-->
+<!--        <td>{{ post.id }}</td>-->
+<!--        <td>{{ post.first_name }}</td>-->
+<!--        <td>{{ post.last_name }}</td>-->
+<!--        <td>{{ post.address }}</td>-->
+<!--        <td>{{ post.help_class }}</td>-->
+<!--        <td>{{ post.quantity }}</td>-->
+<!--        <td>{{ post.created_at | prettydate }}</td>-->
+<!--&lt;!&ndash;        <td>{{ post.is_helped }}</td>&ndash;&gt;-->
+<!--        <td>-->
+<!--            <button class="btn btn-primary">Track</button>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <a class="btn btn-danger" href="{% url 'user:delete_request' pk=post.pk  %}" role="button">Delete </a>-->
+<!--&lt;!&ndash;            <button class="btn btn-danger">Delete</button>&ndash;&gt;-->
+<!--        </td>-->
+
+<!--      </tr>-->
+<!--      {% endfor %}-->
+
+<!--   </table>-->
+
+
+
 <table>
-    <tr>
-      <th>ID</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-<!--      <th>Phone</th>-->
-      <th>Address</th>
-      <th>Help Class</th>
-      <th>Quantity</th>
-      <th>Created At</th>
-<!--      <th>Help Status</th>-->
-    </tr>
-    {% for post in posts %}
-      <tr id="hiderow">
-        <td>{{ post.id }}</td>
-        <td>{{ post.first_name }}</td>
-        <td>{{ post.last_name }}</td>
-        <td>{{ post.address }}</td>
-        <td>{{ post.help_class }}</td>
-        <td>{{ post.quantity }}</td>
-        <td>{{ post.created_at | prettydate }}</td>
-<!--        <td>{{ post.is_helped }}</td>-->
-        <td>
-            <button class="btn btn-primary">Track</button>
-        </td>
-        <td>
-            <button class="btn btn-danger">Delete</button>
-        </td>
 
-      </tr>
-      {% endfor %}
+          <tr>
 
-   </table>
+              <th>ID</th>
+
+              <th>First Name</th>
+
+              <th>Last Name</th>
+
+              <th>Address</th>
+
+              <th>Help Class</th>
+
+              <th>Quantity Requested</th>
+
+              <th>Created At</th>
+
+              <th>Help Status</th>
+
+          </tr>
+
+          {% for post in posts %}
+
+              <tr id="hiderow">
+
+                  <td>{{ post.id }}</td>
+
+                  <td>{{ post.first_name }}</td>
+
+                  <td>{{ post.last_name }}</td>
+
+                  <td>{{ post.address }}</td>
+
+                  <td>{{ post.help_class }}</td>
+
+                  <td>
+
+{{ post.original_quantity }}
+<!--                      {% if post.quantity == 0 %}-->
+
+<!--                          0-->
+
+<!--                      {% else %}-->
+
+<!--                          {{ post.quantity }}-->
+
+<!--                      {% endif %}-->
+
+                  </td>
+
+                  <td>{{ post.created_at | prettydate }}</td>
+
+                  <td>
+
+                      {% if post.quantity == post.original_quantity %}
+
+                          Request is received
+
+                      {% elif post.quantity < post.original_quantity and post.quantity != 0 %}
+
+                          Partially helped
+
+                      {% else %}
+
+                          {% if post.quantity == post.original_quantity %}
+
+                              {% comment %} Set "help_completed" variable to true {% endcomment %}
+
+                              {% with help_completed=True %}
+
+                              {% endwith %}
+
+                          {% endif %}
+
+                          Help is completed
+
+                      {% endif %}
+
+                  </td>
+
+
+                  <td>
+
+                      <a class="btn btn-danger" href="{% url 'user:delete_request' pk=post.pk  %}" role="button">Delete </a>
+
+                  </td>
+
+              </tr>
+
+          {% endfor %}
+
+      </table>
          {% if posts.has_other_pages %}
       <div class="pagination">
         <span class="step-links">
