@@ -1,0 +1,270 @@
+{% extends "user/base.html" %}
+{% load custom_tags %}
+
+{% block title %}
+<title>ADMIN Manage Help Post</title>
+{% endblock %}
+
+
+{% block content %}
+{% csrf_token %} 
+<style>
+  .jumbotron.jumbotron-fluid {
+    text-align: center;
+    background: none;
+  }
+
+  .lead {
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+  }
+
+  .submitform {
+    margin: auto;
+    display: block;
+    padding: 10px;
+  }
+
+  .btnclass {
+    < !-- height: 200px;
+    -->< !-- width: 200px;
+    -->background-color: yellowgreen;
+    position: relative;
+  }
+
+  .alist:hover .groupbtn {
+    display: block;
+  }
+
+  .groupbtn {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .red-button {
+  background-color: red;
+}
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #abd4c6;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-transform: uppercase;
+  }
+
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+</style>
+
+
+<head>
+
+  <!-- style css -->
+  <link rel="stylesheet" type="text/css" href="/static/user/admin-css/style.css">
+  <!-- font css -->
+  <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tweaks for older IEs-->
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+
+{% load crispy_forms_tags %}
+<h5>// This is ADMIN Manage Help Post</h5>
+<div class="section1light">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ 
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <p class="lead 1" style="text-align:left">Help List</p>
+      <button id="show-button" class="btn btn-secondary">Show Hidden</button>
+      <table>
+        <tr>
+          <th></th>
+          <th>ID</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Address</th>
+          <th>Help Class</th>
+          <th>Quantity</th>
+          <th>Created At</th>
+        </tr>
+        {% for need in needs %}
+        <tr id="row-{{ need.helpneedid }}" class="row-item">
+          <form action="{% url 'user:delete_help_post' %}" method="post">
+            {% csrf_token %}
+            <td><input type="checkbox" name="selected_ids" value="{{ need.helpneedid }}"></td>
+            <td>{{ need.id }}</td>
+            <td>{{ need.first_name }}</td>
+            <td>{{ need.last_name }}</td>
+            <td>{{ need.address }}</td>
+            <td>{{ need.help_class }}</td>
+            <td>{{ need.quantity }}</td>
+            <td>{{ need.created_at | prettydate }}</td>
+            <td> {{ need.helpneedid }} </td>
+          </form>
+          <td>
+            <button class="btn btn-secondary hide-button" data-row-id="{{ need.helpneedid }}">Hide</button>
+          </td>
+          
+        </tr>
+        {% endfor %}
+
+        
+
+      </table>
+      <form action="{% url 'user:delete_help_post' %}" method="post" id="delete-selected-form">
+        {% csrf_token %}
+        <input type="hidden" name="selected_ids" id="selected-ids-input">
+        <button type="button" class="btn btn-danger" id="delete-selected-button">Delete Selected</button>
+       </form>
+       
+    </div>
+
+  </div>
+</div>
+
+
+
+<script>
+// Get all hide buttons
+const hideButtons = document.querySelectorAll('.hide-button');
+
+// Attach a click event listener to each hide button
+hideButtons.forEach((button) => {
+ button.addEventListener('click', () => {
+ // Get the row ID from the data attribute
+ const rowId = button.getAttribute('data-row-id');
+
+ // Send an AJAX request to the server to hide the record
+ $.ajax({
+ url: '{% url 'user:hide_help_post' %}',
+ method: 'POST',
+ data: {
+ csrfmiddlewaretoken: csrfToken,
+ helpneedid: rowId,
+ },
+ success: (data) => {
+ // Handle successful hiding of the record
+ // For example, you could hide the corresponding row in the table
+ const row = document.getElementById(`row-${rowId}`);
+ row.style.display = 'none';
+ },
+ error: (jqXHR, textStatus, errorThrown) => {
+ // Handle errors that occur during the hiding process
+ // For example, you could display an error message to the user
+ console.error(`Error hiding record: ${errorThrown}`);
+ },
+ });
+ });
+});
+</script>
+
+<script>
+  // Get the show button element
+const showButton = document.getElementById('show-button');
+
+// Attach a click event listener to the show button
+showButton.addEventListener('click', () => {
+ // Get all hidden rows
+ const hiddenRows = document.querySelectorAll('.row-item');
+
+ // Get the IDs of the hidden records
+ const hiddenIds = Array.from(hiddenRows).map((row) => row.getAttribute('id').replace('row-', ''));
+
+ // Send an AJAX request to the server to show the hidden records
+ $.ajax({
+ url: '{% url 'user:show_help_post' %}',
+ method: 'POST',
+ data: {
+ csrfmiddlewaretoken: csrfToken,
+ helpneedids: hiddenIds,
+ },
+ success: (data) => {
+ // Handle successful showing of the hidden records
+ // For example, you could show each hidden row by setting its display property to an empty string
+ hiddenRows.forEach((row) => {
+ row.style.display = '';
+ });
+ },
+ error: (jqXHR, textStatus, errorThrown) => {
+ // Handle errors that occur during the showing process
+ // For example, you could display an error message to the user
+ console.error(`Error showing records: ${errorThrown}`);
+ },
+ });
+});
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Add a script tag for your custom JavaScript code -->
+<script>
+  // Get the CSRF token from the page
+  const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+  
+  // Get the delete selected button element
+  const deleteSelectedButton = document.getElementById('delete-selected-button');
+  
+  // Attach a click event listener to the delete selected button
+  deleteSelectedButton.addEventListener('click', () => {
+   // Get all the checkboxes that are checked
+   const selectedCheckboxes = document.querySelectorAll('input[name="selected_ids"]:checked');
+  
+   // Get the IDs of the selected objects
+   const selectedIds = Array.from(selectedCheckboxes).map((checkbox) => checkbox.value);
+  
+   // Send an AJAX request to the server to delete the selected objects
+   $.ajax({
+   url: '{% url 'user:delete_help_post' %}',
+   method: 'POST',
+   data: {
+   csrfmiddlewaretoken: csrfToken,
+   selected_ids: selectedIds,
+   },
+   success: (data) => {
+   // Handle successful deletion of the selected objects
+   // For example, you could remove the corresponding rows from the table
+   selectedIds.forEach((id) => {
+   const row = document.getElementById(`row-${id}`);
+   row.remove();
+   });
+   },
+   error: (jqXHR, textStatus, errorThrown) => {
+   // Handle errors that occur during the deletion process
+   // For example, you could display an error message to the user
+   console.error(`Error deleting objects: ${errorThrown}`);
+   },
+   });
+  });
+  </script>
+  
+  
+
+{% endblock %}

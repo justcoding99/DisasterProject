@@ -13,6 +13,7 @@ from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
+
 from .models import HelpNeed, Volunteer, HelpNeedHelper
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
@@ -22,6 +23,8 @@ from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm, ReadyF
 from django.http import JsonResponse
 from pymongo import MongoClient
 from django.core.paginator import Paginator
+import logging
+import uuid
 
 
 
@@ -50,8 +53,14 @@ def login_view(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            admin = "admin"
             user = authenticate(username=username, password=password)
-            if user is not None:
+
+            if username == admin:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}.")
+                return redirect("user:admin")
+            elif user != None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}.")
                 return redirect("user:volunteer")
@@ -167,6 +176,18 @@ def profile_view(request):
     else:
         form = ProfileForm(request.POST or None, instance=request.user)
     return render(request=request, template_name="user/profile.html", context={"profile_form": form})
+
+
+
+
+def admin_view(request):
+     return render(request=request, template_name="user/admin.html")
+
+
+
+def userslist_view(request):
+    users = User.objects.all()
+    return render(request=request, template_name="user/userslist.html", context={"users":users})
 
 def food_form_view(request):
     if request.user.is_authenticated:
@@ -389,3 +410,139 @@ def delete_request(request, pk):
     instance.delete()
     messages.info(request, f"Your request has been deleted successfully ")
     return redirect('user:my_requests')
+def statistics_view(request):
+
+    client = MongoClient('mongodb://root:example@localhost:27017,localhost/?authMechanism=DEFAULT')
+    db = client['djongo']
+    collection = db['user_helpneed']
+
+    data = collection.find({}, {'_id': 0, 'quantity': 1, 'help_class': 1})
+    food_no = HelpNeed.objects.filter(help_class='food').count()
+    food_no = int(food_no)
+    shelter_no = HelpNeed.objects.filter(help_class='shelter').count()
+    shelter_no = int(shelter_no)
+    heating_no = HelpNeed.objects.filter(help_class='heating').count()
+    heating_no = int(heating_no)
+    clother_no = HelpNeed.objects.filter(help_class='clothes').count()
+    clother_no = int(clother_no)
+    medical_supplies_no = HelpNeed.objects.filter(help_class='medical_supplies').count()
+    medical_supplies_no = int(medical_supplies_no)
+    hygiene_no = HelpNeed.objects.filter(help_class='hygiene').count()
+    hygiene_no = int(hygiene_no)
+
+    help_class_list = ['food','shelter','heating','clother','medical_supplies','hygiene']
+    count_list = [food_no,shelter_no,heating_no,clother_no,medical_supplies_no,hygiene_no]
+    context={
+
+        'help_class_list':help_class_list,
+        'count_list':count_list
+
+            }
+
+    return render(request,"user/statistics.html",context)
+
+
+def manage_help_post_view(request):
+    needs = HelpNeed.objects.all() #filter here.
+    context={
+        "needs": needs
+        }
+    return render(request, "user/manage_help_post.html", context)
+
+logger = logging.getLogger(__name__)
+
+
+    
+
+
+
+
+
+
+
+
+def delete_help_post_view(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('selected_ids[]')
+        print(f'Selected IDs: {selected_ids}')
+        try:
+            client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
+            db = client['djongo']
+            collection = db['user_helpneed']
+            # Delete the selected objects using their helpneedid values
+            filter = {'helpneedid': {'$in': [uuid.UUID(id_) for id_ in selected_ids]}}
+            print(f'Delete filter: {filter}')
+            result = collection.delete_many(filter)
+            print(f'Deleted count: {result.deleted_count}')
+            if result.deleted_count > 0:
+                # Return a JSON response indicating success
+                return JsonResponse({'status': 'success'})
+            else:
+                # Handle case when the documents were not found or not deleted
+                # Return a JSON response indicating failure
+                return JsonResponse({'status': 'failure'})
+        except Exception as e:
+            # Handle any exceptions that occur during the deletion process
+            # Return a JSON response indicating failure
+            return JsonResponse({'status': 'failure'})
+    else:
+        # Handle GET requests or requests that are not made via AJAX
+        return redirect('user:manage_help_post')
+
+
+
+
+
+    """"
+    return HttpResponse('Error deleting the document') 
+    """
+
+def hide_help_post_view(request):
+    if request.method == 'POST':
+        # Get the ID of the record to hide from the POST data
+        helpneedid = request.POST.get('helpneedid')
+        try:
+            client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
+            db = client['djongo']
+            collection = db['user_helpneed']
+            # Get the HelpNeed object with the specified ID
+            help_need = HelpNeed.objects.get(helpneedid=helpneedid)
+            # Set the hidden field to True
+            help_need.hidden = True
+            # Save the changes to the database
+            help_need.save()
+            # Return a JSON response indicating success
+            return JsonResponse({'status': 'success'})
+        except HelpNeed.DoesNotExist:
+            # Handle case when the HelpNeed object with the specified ID does not exist
+            # Return a JSON response indicating failure
+            return JsonResponse({'status': 'failure'})
+    else:
+        # Handle GET requests or requests that are not made via AJAX
+        return redirect('user:manage_help_post')
+    
+
+
+def show_help_post_view(request):
+    if request.method == 'POST':
+        helpneedids = request.POST.getlist('helpneedids[]')
+        print(f'HelpNeed IDs: {helpneedids}')
+        try:
+            client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
+            db = client['djongo']
+            collection = db['user_helpneed']
+            # Get the HelpNeed objects with the specified IDs
+            help_needs = HelpNeed.objects.filter(helpneedid__in=helpneedids)
+            # Set the hidden field to False for all objects
+            result = help_needs.update(hidden=False)
+            print(f'Update result: {result}')
+            # Return a JSON response indicating success
+            return JsonResponse({'status': 'success'})
+        except Exception as e:
+            # Handle any exceptions that occur during the showing process
+            # Return a JSON response indicating failure
+            return JsonResponse({'status': 'failure'})
+    else:
+        # Handle GET requests or requests that are not made via AJAX
+        return redirect('user:manage_help_post')
+

@@ -16,6 +16,8 @@ urlpatterns = [
     path("activate/<str:uidb64>/<str:token>", views.activate, name='activate'),
     path('first_aid', views.firstaid_view, name='first_aid'),
     path('profile', views.profile_view, name='profile'),
+    path('admin', views.admin_view, name='admin'),
+    path('userslist', views.userslist_view, name='userslist'),
     path('food_form', views.food_form_view, name='food_form'),
     path('shelter_form', views.shelter_form_view, name='shelter_form'),
     path('medical_form', views.medical_form_view, name='medical_form'),
@@ -29,5 +31,11 @@ urlpatterns = [
     path('helped_archive', views.helped_archive, name='helped_archive'),
     path('my_requests', views.my_requests, name='my_requests'),
     path('delete_request/<int:pk>/', views.delete_request, name='delete_request'),
+    path('statistics', views.statistics_view, name='statistics'),
+    path('manage_help_post/', views.manage_help_post_view, name='manage_help_post'),
+    path('delete_help_post/', views.delete_help_post_view, name='delete_help_post'),
+    path('hide_help_post/', views.hide_help_post_view, name='hide_help_post'),
+    path('show_help_post/', views.show_help_post_view, name='show_help_post'),
+
 
 ]
