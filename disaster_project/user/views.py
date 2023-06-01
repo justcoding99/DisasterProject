@@ -27,7 +27,7 @@ import logging
 import uuid
 
 
-
+logger = logging.getLogger(__name__)
 def index(request):
     template = loader.get_template('user/index.html')
     context = {}
@@ -145,7 +145,7 @@ def help_need_list(request):
 
 
 def volunteer_view(request):
-    needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at')
+    needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at')  
     paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -426,13 +426,17 @@ def statistics_view(request):
 
     return render(request,"user/statistics.html",context)
 
+logger = logging.getLogger(__name__)
 
 def manage_help_post_view(request):
-    needs = HelpNeed.objects.all() #filter here.
+    needs = HelpNeed.objects.filter(hidden = False)
     context={
         "needs": needs
         }
     return render(request, "user/manage_help_post.html", context)
+
+
+
 
 logger = logging.getLogger(__name__)
 

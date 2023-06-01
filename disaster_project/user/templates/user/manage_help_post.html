@@ -115,6 +115,7 @@
           <th>Created At</th>
         </tr>
         {% for need in needs %}
+          {% if not need.hidden %}
         <tr id="row-{{ need.helpneedid }}" class="row-item">
           <form action="{% url 'user:delete_help_post' %}" method="post">
             {% csrf_token %}
@@ -133,6 +134,7 @@
           </td>
           
         </tr>
+        {% endif %}
         {% endfor %}
 
         
