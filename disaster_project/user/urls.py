@@ -29,10 +29,13 @@ urlpatterns = [
     # path('update_quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('update-quantity/<int:pk>/', views.update_quantity, name='update_quantity'),
     path('helped_archive', views.helped_archive, name='helped_archive'),
+    path('my_requests', views.my_requests, name='my_requests'),
+    path('delete_request/<int:pk>/', views.delete_request, name='delete_request'),
     path('statistics', views.statistics_view, name='statistics'),
     path('manage_help_post/', views.manage_help_post_view, name='manage_help_post'),
     path('delete_help_post/', views.delete_help_post_view, name='delete_help_post'),
     path('hide_help_post/', views.hide_help_post_view, name='hide_help_post'),
     path('show_help_post/', views.show_help_post_view, name='show_help_post'),
+
 
 ]
