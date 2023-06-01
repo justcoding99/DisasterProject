@@ -39,7 +39,7 @@
                     lat_db = {{ need.lat }};
                     lng_db = {{ need.lon }};
                     marker = L.marker(new L.LatLng(lat_db, lng_db));
-                    marker.bindPopup("{{ need.name }} - {{  need.phone }}");
+                    marker.bindPopup("{{ need.first_name }} - {{ need.last_name }} - {{  need.help_class }} - {{  need.quantity }} - {{  need.phone }}");
                     markers.addLayer(marker);
                 {% endfor %}
             map.addLayer(markers);

@@ -47,7 +47,10 @@ class HelpNeed(models.Model):
     original_quantity = models.PositiveIntegerField(editable=False, blank=False, null=True)
     help_class = models.CharField(max_length=20, choices=Help_Class, blank=False, null=True)
     user_type = models.CharField(max_length=20, choices=User_Type, blank=False, null=True)
+
+    volunteer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='volunteer_requests', blank=False, null=True)
     hidden = models.BooleanField(default=False)
+
 
     def __str__(self):
         return self.first_name + " " + self.last_name
