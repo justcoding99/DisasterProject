@@ -389,3 +389,6 @@ def delete_request(request, pk):
     instance.delete()
     messages.info(request, f"Your request has been deleted successfully ")
     return redirect('user:my_requests')
+
+def aboutus_view(request):
+    return render(request=request, template_name="user/about_us.html")
