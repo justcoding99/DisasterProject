@@ -30,5 +30,7 @@ urlpatterns = [
     path('my_requests', views.my_requests, name='my_requests'),
     path('delete_request/<int:pk>/', views.delete_request, name='delete_request'),
     path('about_us', views.aboutus_view, name='about_us'),
+    path('hospitals', views.hospital_locations_view, name='hospitals'),
+    path('nearby-hospitals', views.nearby_hospitals, name='nearby_hospitals'),
 
 ]

@@ -111,3 +111,12 @@ class HelpNeedHelper(models.Model):
 
     class Meta:
         unique_together = ('help_need', 'user')
+
+class Hospitals(models.Model):
+    name = models.CharField(max_length=500)
+    city = models.CharField(max_length=500, blank=False, null=True)
+    lat = models.CharField(max_length=255, default='0')
+    lon = models.CharField(max_length=255, default='0')
+
+    def __str__(self):
+        return self.name

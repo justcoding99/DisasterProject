@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+
+
+    <title>Disaster Recovery Website Hospitals</title>
+
+
+
+
+ <div class="mapsection">
+        <div class="row">
+            <div class="col">
+                <div id="map">
+                    {{ map_html|safe }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<div class="row">
+
+          <div class="col-md-10">
+                <form id="locationForm" method="post" action="{% url 'user:nearby_hospitals' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="user_lat" name="user_lat">
+                    <input type="hidden" id="user_lon" name="user_lon">
+                    <button type="button" onclick="getLocation()" class="btn btn-secondary">Find nearby hospitals</button>
+                </form>
+            </div>
+     </div>
+
+    <style>
+        .mapsection {
+            height: 500px;
+        }
+
+        #map {
+
+            width: 70%;
+            height: 70%;
+        }
+    </style>
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById("user_lat").value = position.coords.latitude;
+        document.getElementById("user_lon").value = position.coords.longitude;
+        document.getElementById("locationForm").submit();
+    }
+</script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
