@@ -130,6 +130,21 @@ def help_need_view(request):
 
 def help_map(request):
     needs = HelpNeed.objects.all()
+    map = folium.Map()
+    marker_cluster = FastMarkerCluster(
+        data=list(
+            zip([need.lat for need in needs], [need.lon for need in needs])))
+
+    locations = [(need.lat, need.lon) for need in needs]
+    popups = [(need.first_name, need.last_name, need.phone, need.help_class) for need in needs]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
+
+    needs = map._repr_html_()
+
     return render(request=request, template_name="user/help_map.html", context={"needs": needs})
 
 
@@ -403,9 +418,9 @@ def hospital_locations_view(request):
     # Create a map object centered on Turkey
     map = folium.Map(location=[38.9637, 35.2433], zoom_start=6)
 
-    FastMarkerCluster(list(
-        zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals]))).add_to(
-        map)
+    # FastMarkerCluster(list(
+    #     zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals]))).add_to(
+    #     map)
     # Add markers to the map
     # for hospital in hospitals:
     #     latitude = float(hospital.lat)
@@ -419,13 +434,23 @@ def hospital_locations_view(request):
     #             popup=hospital.name
     #         ).add_to(map)
 
-    map_hospitals = map.get_root().render()
+    marker_cluster = FastMarkerCluster(
+        data=list(zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals])))
+
+    locations = [(hospital.lat, hospital.lon) for hospital in hospitals]
+    popups = [hospital.name for hospital in hospitals]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
+    map_hospitals = map._repr_html_()
 
     return render(request=request, template_name="user/hospitals.html", context= {'map_html': map_hospitals})
 
 def calculate_distance(lat1, lon1, lat2, lon2):
-    # Calculate the distance between two coordinates using Haversine formula
-    R = 6371  # Radius of the Earth in kilometers
+    # Haversine formula
+    R = 6371  # earth radius
     lat1_rad, lon1_rad = radians(lat1), radians(lon1)
     lat2_rad, lon2_rad = radians(lat2), radians(lon2)
     dlat = lat2_rad - lat1_rad
@@ -444,7 +469,7 @@ def nearby_hospitals(request):
     if request.method != "POST":
         return HttpResponse("No user location data available.")
 
-    threshold_distance = 10  # kilometers
+    threshold_distance = 1800  # kilometers
 
 
     hospitals = Hospitals.objects.all()
@@ -456,9 +481,25 @@ def nearby_hospitals(request):
             nearby_hospitals.append(hospital)
 
     map = folium.Map(location=[user_lat, user_lon], zoom_start=12)
-    FastMarkerCluster(list(
-        zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals]))).add_to(
-        map)
+    # FastMarkerCluster(list(
+    #     zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals]))).add_to(
+    #     map)
+
+    # for hospital in nearby_hospitals:
+    #     folium.Marker(
+    #         location=[hospital.lat, hospital.lon],
+    #         popup=hospital.name
+    #     ).add_to(map)
+    marker_cluster = FastMarkerCluster(
+        data=list(zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals])))
+
+    locations = [(hospital.lat, hospital.lon) for hospital in nearby_hospitals]
+    popups = [hospital.name for hospital in nearby_hospitals]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
 
     map_hospitals = map._repr_html_()
     context = {'map_html': map_hospitals}

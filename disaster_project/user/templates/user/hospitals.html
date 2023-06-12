@@ -1,21 +1,14 @@
 <!DOCTYPE html>
-
-
+{% extends "./base.html" %}
+ {% block title %}
     <title>Disaster Recovery Website Hospitals</title>
+    {% endblock %}
+
+{% block content %}
 
 
 
 
- <div class="mapsection">
-        <div class="row">
-            <div class="col">
-                <div id="map">
-                    {{ map_html|safe }}
-                </div>
-            </div>
-
-        </div>
-    </div>
 
 <div class="row">
 
@@ -27,17 +20,40 @@
                     <button type="button" onclick="getLocation()" class="btn btn-secondary">Find nearby hospitals</button>
                 </form>
             </div>
-     </div>
+</div>
+
+ <div class="mapsection">
+        <div class="row">
+            <div class="col">
+                <div id="map">
+                    {{ map_html|safe }}
+                </div>
+            </div>
+
+        </div>
+ </div>
+<div class="row">
+
+          <div class="col-md-12">
+              <p></p>
+
+          </div>
+</div>
+
 
     <style>
         .mapsection {
             height: 500px;
+            padding: 20px;
+            padding-bottom: 20px;
+            margin-left: 20%;
         }
 
         #map {
 
-            width: 70%;
-            height: 70%;
+            width: 90%;
+            height: 90%;
+            margin-bottom: 20px;
         }
     </style>
 <script>
@@ -61,3 +77,4 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 
 
+{% endblock %}
