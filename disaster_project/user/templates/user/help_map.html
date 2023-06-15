@@ -22,29 +22,5 @@
     </div>
 
 
-<!--    <script>-->
-<!--        navigator.geolocation.getCurrentPosition(showPosition);-->
-
-<!--        function showPosition(position) {-->
-<!--            let lat = position.coords.latitude;-->
-<!--            let lon = position.coords.longitude;-->
-<!--            const map = L.map('map').setView([lat, lon], 13);-->
-<!--            const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {-->
-<!--                maxZoom: 19,-->
-<!--                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'-->
-<!--            }).addTo(map);-->
-<!--            var markers = L.markerClusterGroup();-->
-<!--            let lat_db, lng_db, marker;-->
-<!--                {% for need in needs %}-->
-<!--                    lat_db = {{ need.lat }};-->
-<!--                    lng_db = {{ need.lon }};-->
-<!--                    marker = L.marker(new L.LatLng(lat_db, lng_db));-->
-<!--                    marker.bindPopup("{{ need.first_name }} - {{ need.last_name }} - {{  need.help_class }} - {{  need.quantity }} - {{  need.phone }}");-->
-<!--                    markers.addLayer(marker);-->
-<!--                {% endfor %}-->
-<!--            map.addLayer(markers);-->
-
-<!--        }-->
-<!--    </script>-->
 
 {% endblock content %}
