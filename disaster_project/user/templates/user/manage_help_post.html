@@ -68,6 +68,9 @@
     border: 1px solid #ddd;
     padding: 8px;
   }
+  .hidden-row {
+    display: none;
+  }
 </style>
 
 
@@ -83,7 +86,7 @@
 </head>
 
 {% load crispy_forms_tags %}
-<h5>// This is ADMIN Manage Help Post</h5>
+
 <div class="section1light">
   <div class="row">
     <div class="col-sm-12">
@@ -105,39 +108,50 @@
       <button id="show-button" class="btn btn-secondary">Show Hidden</button>
       <table>
         <tr>
-          <th></th>
-          <th>ID</th>
-          <th>First Name</th>
-          <th>Last Name</th>
-          <th>Address</th>
-          <th>Help Class</th>
-          <th>Quantity</th>
-          <th>Created At</th>
+            <th></th>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Address</th>
+            <th>Help Class</th>
+            <th>Quantity</th>
+            <th>Created At</th>
         </tr>
-        {% for need in needs %}
-        <tr id="row-{{ need.helpneedid }}" class="row-item">
-          <form action="{% url 'user:delete_help_post' %}" method="post">
-            {% csrf_token %}
-            <td><input type="checkbox" name="selected_ids" value="{{ need.helpneedid }}"></td>
-            <td>{{ need.id }}</td>
-            <td>{{ need.first_name }}</td>
-            <td>{{ need.last_name }}</td>
-            <td>{{ need.address }}</td>
-            <td>{{ need.help_class }}</td>
-            <td>{{ need.quantity }}</td>
-            <td>{{ need.created_at | prettydate }}</td>
-            <td> {{ need.helpneedid }} </td>
-          </form>
-          <td>
-            <button class="btn btn-secondary hide-button" data-row-id="{{ need.helpneedid }}">Hide</button>
-          </td>
-          
-        </tr>
+        {% for need in page_obj %}
+            <tr id="row-{{ need.helpneedid }}" class="row-item {% if need.hidden %}hidden-row{% endif %}">
+                <form action="{% url 'user:delete_help_post' %}" method="post">
+                    {% csrf_token %}
+                    <td><input type="checkbox" name="selected_ids" value="{{ need.helpneedid }}"></td>
+                    <td>{{ need.id }}</td>
+                    <td>{{ need.first_name }}</td>
+                    <td>{{ need.last_name }}</td>
+                    <td>{{ need.address }}</td>
+                    <td>{{ need.help_class }}</td>
+                    <td>{{ need.quantity }}</td>
+                    <td>{{ need.created_at | prettydate }}</td>
+                </form>
+                <td><button class="btn btn-secondary hide-button" data-row-id="{{ need.helpneedid }}">Hide</button></td>
+            </tr>
         {% endfor %}
-
-        
-
-      </table>
+    </table>
+    
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">« first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+    
+            <span class="current-page">{{ page_obj.number }}</span>
+    
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last »</a>
+            {% endif %}
+        </span>
+    </div>
+    
+    
       <form action="{% url 'user:delete_help_post' %}" method="post" id="delete-selected-form">
         {% csrf_token %}
         <input type="hidden" name="selected_ids" id="selected-ids-input">
@@ -206,10 +220,12 @@ showButton.addEventListener('click', () => {
  helpneedids: hiddenIds,
  },
  success: (data) => {
+  console.log('AJAX request succeeded');
  // Handle successful showing of the hidden records
  // For example, you could show each hidden row by setting its display property to an empty string
  hiddenRows.forEach((row) => {
- row.style.display = '';
+  console.log(`Showing row: ${row.id}`);
+  row.classList.remove('hidden-row');
  });
  },
  error: (jqXHR, textStatus, errorThrown) => {

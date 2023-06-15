@@ -90,16 +90,30 @@ DATABASES = {
             'port': 27017,
             'username': 'root',
             'password': 'example',
-
-            'host': 'mongodb://localhost:27017',
-            'host': 'localhost',
-            'port': 27017,
-            'username': 'root',
-            'password': 'example',
         }
     }
 }
 
+"""
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+"""
 
 
 # Password validation

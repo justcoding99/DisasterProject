@@ -1,7 +1,27 @@
 from django import template
 import datetime
 from django.utils import timezone
+from django.utils.safestring import mark_safe
+import json
 register = template.Library()
+
+@register.filter
+def get_usernames(queryset):
+    usernames = [item['user__username'] for item in queryset]
+    return mark_safe(json.dumps(usernames))
+
+@register.filter
+def get_quantities(queryset):
+    if not queryset:
+        return mark_safe(json.dumps([]))
+    if 'max_quantity' in queryset[0]:
+        quantities = [item['max_quantity'] for item in queryset]
+    elif 'min_quantity' in queryset[0]:
+        quantities = [item['min_quantity'] for item in queryset]
+    else:
+        quantities = []
+    return mark_safe(json.dumps(quantities))
+
 
 @register.filter
 def prettydate(value):
@@ -34,3 +54,5 @@ def prettydate(value):
 #             return '{} hours ago'.format(round(s/3600))
 #     else:
 #         return None
+
+

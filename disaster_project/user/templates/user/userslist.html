@@ -45,11 +45,15 @@ td {
   padding: 8px;
 }
 
-    </style>
+</style>
+<head>
+  <!-- Tweaks for older IEs-->
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
 
 
 {% load crispy_forms_tags %}
-<h5>// This is ADMIN Homepage</h5>
+
     <div class="section1light">
          <div class="row">
             <div class="col-sm-12">
@@ -76,7 +80,7 @@ td {
       <th>Is Superuser</th>
       <th>Is Active</th>
     </tr>
-    {% for user in users %}
+    {% for user in page_obj %}
       <tr>
         <td>{{ user.id }}</td>
         <td>{{ user.username }}</td>
@@ -89,36 +93,24 @@ td {
         <td>{{ user.is_superuser }}</td>
         <td>{{ user.is_active }}</td>
       </tr>
-      {% endfor %}
+    {% endfor %}
+</table>
 
-   </table>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">« first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
 
+        <span class="current-page">{{ page_obj.number }}</span>
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-9">
-       <div class="list-group">
-         {% for need in needs %}
-          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1"> {{ need.name }} </h5>
-              <small>{{ need.created_at | prettydate }}</small>
-            </div>
-            <p class="mb-1">{{ need.phone }}</p>
-            <p class="mb-1">{{ need.description }}</p>
-            <small> {{ need.address }}</small>
-          </a>
-                 {% endfor %}
-        </div>
-
-    </div>
-    <div class="col-md-3">
-
-    </div>
-  </div>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last »</a>
+        {% endif %}
+    </span>
 </div>
-
-
 
 
 

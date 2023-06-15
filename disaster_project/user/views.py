@@ -15,7 +15,7 @@ from django.utils.encoding import force_bytes, force_str
 
 from .models import HelpNeed, Volunteer, HelpNeedHelper, Hospitals
 
-from .models import HelpNeed, Volunteer, HelpNeedHelper
+from .models import HelpNeed, Volunteer, HelpNeedHelper, User
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
@@ -31,9 +31,11 @@ from math import radians, sin, cos, sqrt, atan2
 
 import logging
 import uuid
+from django.db.models import Max, Min
 
 
 
+logger = logging.getLogger(__name__)
 def index(request):
     template = loader.get_template('user/index.html')
     context = {}
@@ -167,6 +169,12 @@ def help_need_list(request):
 
 def volunteer_view(request):
     needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at').exclude(volunteer=request.user)
+    """
+    client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
+    db = client['djongo']
+    collection = db['user_helpneed']
+    needs2 = collection.find({'hidden': False})
+    """
     paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -206,9 +214,18 @@ def admin_view(request):
 
 
 
+
+
+
+
+
 def userslist_view(request):
     users = User.objects.all()
-    return render(request=request, template_name="user/userslist.html", context={"users":users})
+    paginator = Paginator(users, 10) # Show 10 users per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request=request, template_name="user/userslist.html", context={"page_obj": page_obj})
+
 
 def food_form_view(request):
     if request.user.is_authenticated:
@@ -433,6 +450,7 @@ def delete_request(request, pk):
     return redirect('user:my_requests')
 
 
+
 def aboutus_view(request):
     return render(request=request, template_name="user/about_us.html")
 
@@ -532,42 +550,23 @@ def nearby_hospitals(request):
 
 def statistics_view(request):
 
-    client = MongoClient('mongodb://root:example@localhost:27017,localhost/?authMechanism=DEFAULT')
-    db = client['djongo']
-    collection = db['user_helpneed']
 
-    data = collection.find({}, {'_id': 0, 'quantity': 1, 'help_class': 1})
-    food_no = HelpNeed.objects.filter(help_class='food').count()
-    food_no = int(food_no)
-    shelter_no = HelpNeed.objects.filter(help_class='shelter').count()
-    shelter_no = int(shelter_no)
-    heating_no = HelpNeed.objects.filter(help_class='heating').count()
-    heating_no = int(heating_no)
-    clother_no = HelpNeed.objects.filter(help_class='clothes').count()
-    clother_no = int(clother_no)
-    medical_supplies_no = HelpNeed.objects.filter(help_class='medical_supplies').count()
-    medical_supplies_no = int(medical_supplies_no)
-    hygiene_no = HelpNeed.objects.filter(help_class='hygiene').count()
-    hygiene_no = int(hygiene_no)
 
-    help_class_list = ['food','shelter','heating','clother','medical_supplies','hygiene']
-    count_list = [food_no,shelter_no,heating_no,clother_no,medical_supplies_no,hygiene_no]
-    context={
+logger = logging.getLogger(__name__)
 
-        'help_class_list':help_class_list,
-        'count_list':count_list
-
-            }
-
-    return render(request,"user/statistics.html",context)
 
 
 def manage_help_post_view(request):
-    needs = HelpNeed.objects.all() #filter here.
-    context={
-        "needs": needs
-        }
+    needs = HelpNeed.objects.all()
+    paginator = Paginator(needs, 10) # Show 10 help needs per page.
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {'page_obj': page_obj}
     return render(request, "user/manage_help_post.html", context)
+
+
+
+
 
 logger = logging.getLogger(__name__)
 
@@ -644,6 +643,7 @@ def hide_help_post_view(request):
 
 
 def show_help_post_view(request):
+    print('show_help_post_view called')
     if request.method == 'POST':
         helpneedids = request.POST.getlist('helpneedids[]')
         print(f'HelpNeed IDs: {helpneedids}')
@@ -653,6 +653,7 @@ def show_help_post_view(request):
             collection = db['user_helpneed']
             # Get the HelpNeed objects with the specified IDs
             help_needs = HelpNeed.objects.filter(helpneedid__in=helpneedids)
+            print(f'HelpNeeds: {help_needs}')
             # Set the hidden field to False for all objects
             result = help_needs.update(hidden=False)
             print(f'Update result: {result}')
@@ -665,5 +666,30 @@ def show_help_post_view(request):
     else:
         # Handle GET requests or requests that are not made via AJAX
         return redirect('user:manage_help_post')
+
+
+
+   
+
+
+
+def statistics_view(request):
+    top_users = HelpNeedHelper.objects.values('user__username').annotate(max_quantity=Max('quantity')).order_by('-max_quantity')[:20]
+    least_users = HelpNeedHelper.objects.values('user__username').annotate(min_quantity=Min('quantity')).order_by('min_quantity')[:20]
+    shelter_requests = HelpNeed.objects.filter(help_class='shelter').count()
+    clothes_requests = HelpNeed.objects.filter(help_class='clothes').count()
+
+    context = {
+        'top_users': top_users,
+        'least_users': least_users,
+        'shelter_requests': shelter_requests,
+        'clothes_requests': clothes_requests,
+    }
+    return render(request, 'user/statistics.html', context)
+
+
+
+
+
 
 
