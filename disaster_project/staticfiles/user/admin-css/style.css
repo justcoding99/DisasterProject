@@ -17,10 +17,6 @@
 
 /*--------------------------------------------------------------------- skeleton ---------------------------------------------------------------------*/
 
-* {
-    box-sizing: border-box !important;
-    transition: ease all 0.5s;
-}
 
 html {
     scroll-behavior: smooth;

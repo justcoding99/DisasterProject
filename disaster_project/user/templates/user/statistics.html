@@ -1,0 +1,172 @@
+{% extends "user/base.html" %}
+{% load custom_tags %}
+
+{% block title %}
+<title>Admin Statistics</title>
+{% endblock %}
+
+
+{% block content %}
+{% csrf_token %} 
+<style>
+  .jumbotron.jumbotron-fluid {
+    text-align: center;
+    background: none;
+  }
+
+  .lead {
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+  }
+
+  .submitform {
+    margin: auto;
+    display: block;
+    padding: 10px;
+  }
+
+  .btnclass {
+    < !-- height: 200px;
+    -->< !-- width: 200px;
+    -->background-color: yellowgreen;
+    position: relative;
+  }
+
+  .alist:hover .groupbtn {
+    display: block;
+  }
+
+  .groupbtn {
+    display: none;
+    position: absolute;
+    top: 5px;
+    right: 5px;
+  }
+
+  .red-button {
+  background-color: red;
+}
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-size: 14px;
+    text-align: center;
+  }
+
+  th {
+    background-color: #abd4c6;
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-transform: uppercase;
+  }
+
+  td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  #chartType {
+        position: absolute;
+        top: 250px;
+        right: 100px;
+    }
+  
+</style>
+
+
+<head>
+
+  <!-- style css -->
+  <link rel="stylesheet" type="text/css" href="/static/user/admin-css/style.css">
+  <!-- font css -->
+  <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tweaks for older IEs-->
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+
+{% load crispy_forms_tags %}
+
+<div class="section1light">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% load custom_tags %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart"></canvas>
+<select id="chartType" >
+  <option value="top">Top Donated Users</option>
+  <option value="least">Least Donated Users</option>
+  <option value="shelter">Shelter Requests</option>
+  <option value="clothes"> Clothes Requests</option>
+</select>
+
+<script>
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var chartType = document.getElementById('chartType');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: {{ top_users|get_usernames|safe }},
+          datasets: [{
+              label: 'Max Quantity',
+              data: {{ top_users|get_quantities|safe }},
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true
+              }
+          }
+      }
+  });
+
+  chartType.addEventListener('change', function() {
+      if (this.value === 'top') {
+          myChart.data.labels = {{ top_users|get_usernames|safe }};
+          myChart.data.datasets[0].label = 'Max Quantity';
+          myChart.data.datasets[0].data = {{ top_users|get_quantities|safe }};
+          myChart.data.datasets[0].backgroundColor = 'rgba(54, 162, 235, 0.2)';
+          myChart.data.datasets[0].borderColor = 'rgba(54, 162, 235, 1)';
+      } else if (this.value === 'least') {
+          myChart.data.labels = {{ least_users|get_usernames|safe }};
+          myChart.data.datasets[0].label = 'Min Quantity';
+          myChart.data.datasets[0].data = {{ least_users|get_quantities|safe }};
+          myChart.data.datasets[0].backgroundColor = 'rgba(255, 99, 132, 0.2)';
+          myChart.data.datasets[0].borderColor = 'rgba(255, 99, 132, 1)';
+      } else if (this.value === 'shelter') {
+        myChart.data.labels = ['Shelter Requests'];
+        myChart.data.datasets[0].label = 'Count';
+        myChart.data.datasets[0].data = [{{ shelter_requests }}];
+        myChart.data.datasets[0].backgroundColor = 'rgba(153, 102, 255, 0.2)';
+        myChart.data.datasets[0].borderColor = 'rgba(153, 102, 255, 1)';
+      } else if (this.value === 'clothes') {
+        myChart.data.labels = ['Clothes Requests'];
+        myChart.data.datasets[0].label = 'Count';
+        myChart.data.datasets[0].data = [{{ clothes_requests }}];
+        myChart.data.datasets[0].backgroundColor = 'rgba(255, 159, 64, 0.2)';
+        myChart.data.datasets[0].borderColor = 'rgba(255, 159, 64, 1)';
+      }
+      myChart.update();
+  });
+</script>
+
+
+
+{% endblock %}

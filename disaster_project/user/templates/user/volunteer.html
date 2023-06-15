@@ -108,6 +108,7 @@ td {
           <th>Action</th>
         </tr>
         {% for need in needs %}
+          {% if not need.hidden %}
         <tr id="hiderow">
           <td>{{ need.id }}</td>
           <td>{{ need.first_name }}</td>
@@ -133,6 +134,7 @@ td {
             </form>
           </td>
         </tr>
+        {% endif %}
         {% endfor %}
       </table>
     </div>
