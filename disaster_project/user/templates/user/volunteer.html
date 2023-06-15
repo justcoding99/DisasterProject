@@ -83,7 +83,7 @@ td {
 .progress-bar {
   height: 100%;
   background-color: #286090;;
-  width: 100%; /* Set initial width to 100% */
+  width: 100%; 
   position: relative;
 }
 
@@ -94,7 +94,7 @@ td {
   <div class="row">
     <div class="col-md-12">
       <p class="lead 1" style="text-align:left">Request List</p>
-<!--      <a class="btn btn-primary" style="float: right;" role="button" href="/helped_archive">View Helped Archive</a>-->
+
 
       <table>
         <tr>
@@ -151,7 +151,7 @@ td {
     progressBar.style.width = progress + '%';
   }
 
-  // Attach event listeners to input elements
+  
   var quantityInputs = document.querySelectorAll('[id^="id_quantity_"]');
   quantityInputs.forEach(function(input) {
     var itemId = input.getAttribute('data-item-id');
@@ -160,7 +160,7 @@ td {
     });
   });
 
-  // Initial update of the progress bars
+  
   {% for need in needs %}
   updateProgressBar('{{ need.id }}');
   {% endfor %}
@@ -216,8 +216,8 @@ function validateQuantity(maxQuantity) {
     if (enteredQuantity > maxQuantity) {
         var errorMessage = "Value should be less than " + maxQuantity + ".";
         quantityInput.setCustomValidity(errorMessage);
-        quantityInput.reportValidity(); // Display the custom error message
-        return false; // Prevent form submission
+        quantityInput.reportValidity(); 
+        return false; 
     }
 
     // Clear the custom error message
