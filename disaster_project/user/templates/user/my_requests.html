@@ -99,10 +99,6 @@ td {
 
               <th>ID</th>
 
-              <th>First Name</th>
-
-              <th>Last Name</th>
-
               <th>Address</th>
 
               <th>Help Class</th>
@@ -111,7 +107,8 @@ td {
 
               <th>Created At</th>
 
-              <th>Help Status</th>
+              <th>Track Status</th>
+              <th>Actions</th>
 
           </tr>
 
@@ -120,10 +117,6 @@ td {
               <tr id="hiderow">
 
                   <td>{{ post.id }}</td>
-
-                  <td>{{ post.first_name }}</td>
-
-                  <td>{{ post.last_name }}</td>
 
                   <td>{{ post.address }}</td>
 
@@ -150,11 +143,12 @@ td {
 
                       {% if post.quantity == post.original_quantity %}
 
-                          Request is received
+                          Request was received
 
                       {% elif post.quantity < post.original_quantity and post.quantity != 0 %}
 
                           Partially helped
+<!--                      Date: {{ post.updated_at }}-->
 
                       {% else %}
 
@@ -176,8 +170,12 @@ td {
 
 
                   <td>
+                      {% if post.quantity < post.original_quantity %}
 
-                      <a class="btn btn-danger" href="{% url 'user:delete_request' pk=post.pk  %}" role="button">Delete </a>
+                             This request has been Partially/Fully helped, You cannot delete this request!
+                      {% else %}
+                            <a class="btn btn-danger" href="{% url 'user:delete_request' pk=post.pk  %}" role="button">Delete </a>
+                      {% endif %}
 
                   </td>
 

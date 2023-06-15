@@ -13,6 +13,7 @@ from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 
+from .models import HelpNeed, Volunteer, HelpNeedHelper, Hospitals
 
 from .models import HelpNeed, Volunteer, HelpNeedHelper
 from .tokens import account_activation_token
@@ -23,6 +24,11 @@ from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm, ReadyF
 from django.http import JsonResponse
 from pymongo import MongoClient
 from django.core.paginator import Paginator
+
+import folium
+from folium.plugins import FastMarkerCluster
+from math import radians, sin, cos, sqrt, atan2
+
 import logging
 import uuid
 
@@ -136,6 +142,21 @@ def help_need_view(request):
 
 def help_map(request):
     needs = HelpNeed.objects.all()
+    map = folium.Map()
+    marker_cluster = FastMarkerCluster(
+        data=list(
+            zip([need.lat for need in needs], [need.lon for need in needs])))
+
+    locations = [(need.lat, need.lon) for need in needs]
+    popups = [(need.first_name, need.last_name, need.phone, need.help_class) for need in needs]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
+
+    needs = map._repr_html_()
+
     return render(request=request, template_name="user/help_map.html", context={"needs": needs})
 
 
@@ -410,6 +431,105 @@ def delete_request(request, pk):
     instance.delete()
     messages.info(request, f"Your request has been deleted successfully ")
     return redirect('user:my_requests')
+
+
+def aboutus_view(request):
+    return render(request=request, template_name="user/about_us.html")
+
+def hospital_locations_view(request):
+
+    hospitals = Hospitals.objects.all()
+
+    # Create a map object centered on Turkey
+    map = folium.Map(location=[38.9637, 35.2433], zoom_start=6)
+
+    # FastMarkerCluster(list(
+    #     zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals]))).add_to(
+    #     map)
+    # Add markers to the map
+    # for hospital in hospitals:
+    #     latitude = float(hospital.lat)
+    #     longitude = float(hospital.lon)
+    #
+    #     # Check if both latitude and longitude are valid
+    #     if latitude is not None and longitude is not None and isinstance(latitude, float) and isinstance(longitude,
+    #                                                                                                      float):
+    #         folium.Marker(
+    #             location=[latitude, longitude],
+    #             popup=hospital.name
+    #         ).add_to(map)
+
+    marker_cluster = FastMarkerCluster(
+        data=list(zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals])))
+
+    locations = [(hospital.lat, hospital.lon) for hospital in hospitals]
+    popups = [hospital.name for hospital in hospitals]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
+    map_hospitals = map._repr_html_()
+
+    return render(request=request, template_name="user/hospitals.html", context= {'map_html': map_hospitals})
+
+def calculate_distance(lat1, lon1, lat2, lon2):
+    # Haversine formula
+    R = 6371  # earth radius
+    lat1_rad, lon1_rad = radians(lat1), radians(lon1)
+    lat2_rad, lon2_rad = radians(lat2), radians(lon2)
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    a = sin(dlat/2)**2 + cos(lat1_rad) * cos(lat2_rad) * sin(dlon/2)**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    distance = R * c
+    return distance
+
+def nearby_hospitals(request):
+    if request.method == 'POST':
+        user_lat = float(request.POST.get('user_lat'))
+        print(user_lat)
+        user_lon = float(request.POST.get('user_lon'))
+        print(user_lon)
+    if request.method != "POST":
+        return HttpResponse("No user location data available.")
+
+    threshold_distance = 1800  # kilometers
+
+
+    hospitals = Hospitals.objects.all()
+    nearby_hospitals = []
+    for hospital in hospitals:
+        distance = calculate_distance(user_lat, user_lon, hospital.lat, hospital.lon)
+        print(distance)
+        if distance <= threshold_distance:
+            nearby_hospitals.append(hospital)
+
+    map = folium.Map(location=[user_lat, user_lon], zoom_start=12)
+    # FastMarkerCluster(list(
+    #     zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals]))).add_to(
+    #     map)
+
+    # for hospital in nearby_hospitals:
+    #     folium.Marker(
+    #         location=[hospital.lat, hospital.lon],
+    #         popup=hospital.name
+    #     ).add_to(map)
+    marker_cluster = FastMarkerCluster(
+        data=list(zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals])))
+
+    locations = [(hospital.lat, hospital.lon) for hospital in nearby_hospitals]
+    popups = [hospital.name for hospital in nearby_hospitals]
+
+    for location, popup in zip(locations, popups):
+        folium.Marker(location, popup=popup).add_to(marker_cluster)
+
+    marker_cluster.add_to(map)
+
+    map_hospitals = map._repr_html_()
+    context = {'map_html': map_hospitals}
+    return render(request, 'user/hospitals.html', context)
+
 def statistics_view(request):
 
     client = MongoClient('mongodb://root:example@localhost:27017,localhost/?authMechanism=DEFAULT')
@@ -545,4 +665,5 @@ def show_help_post_view(request):
     else:
         # Handle GET requests or requests that are not made via AJAX
         return redirect('user:manage_help_post')
+
 

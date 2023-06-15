@@ -79,7 +79,7 @@
                 {% endif %}
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Welcome, Guest</a>
+                    <a class="nav-link">Welcome, Guest</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link active" aria-current="page" href="/">Home</a>
@@ -90,7 +90,7 @@
 <!--                    <a class="nav-link active" aria-current="page" href="/">Home</a>-->
 <!--                </li>-->
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Maps</a>
+                    <a class="nav-link" href="/hospitals">Maps</a>
                 </li>
 
                 <li class="nav-item">
@@ -184,7 +184,7 @@
                 <div class="footer-thumb">
                     <h2>Who are we?</h2>
                     <ul class="footer-link">
-                        <li><a href="#">About Us</a></li>
+                        <li><a href="/about_us">About Us</a></li>
                         <li><a href="#">Press</a></li>
                     </ul>
                 </div>
@@ -194,8 +194,12 @@
                 <div class="footer-thumb">
                     <h2>Services</h2>
                     <ul class="footer-link">
-                        <li><a href="#">Help</a></li>
-                        <li><a href="#">Provide</a></li>
+                        <li><a href="/first_aid">Awareness</a></li>
+                        {% if user.is_authenticated %}
+                             <li><a href="/volunteer">Provide</a></li>
+                        {% else %}
+                                <li><a href="/login">Provide</a></li>
+                        {% endif %}
                         <li><a href="#">Donate</a></li>
                     </ul>
                 </div>
@@ -217,7 +221,7 @@
                     </div>
                     <div class="col-md-6 col-sm-7">
                         <div class="phone-contact">
-                            <p>Call us <span>(+90) 0555 555 55 55</span></p>
+                            <p>Call us <span>(+90) 555 555 55 55</span></p>
                         </div>
                         <ul class="social-icon">
                             <li><a href="#" class="fa fa-facebook-square" attr="facebook icon"></a></li>
