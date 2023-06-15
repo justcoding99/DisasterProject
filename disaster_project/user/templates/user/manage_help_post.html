@@ -75,13 +75,8 @@
 
 
 <head>
-
-  <!-- style css -->
   <link rel="stylesheet" type="text/css" href="/static/user/admin-css/style.css">
-  <!-- font css -->
   <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
-
-  <!-- Tweaks for older IEs-->
   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 </head>
 
@@ -166,16 +161,16 @@
 
 
 <script>
-// Get all hide buttons
+
 const hideButtons = document.querySelectorAll('.hide-button');
 
-// Attach a click event listener to each hide button
+
 hideButtons.forEach((button) => {
  button.addEventListener('click', () => {
- // Get the row ID from the data attribute
+ 
  const rowId = button.getAttribute('data-row-id');
 
- // Send an AJAX request to the server to hide the record
+ 
  $.ajax({
  url: '{% url 'user:hide_help_post' %}',
  method: 'POST',
@@ -184,14 +179,12 @@ hideButtons.forEach((button) => {
  helpneedid: rowId,
  },
  success: (data) => {
- // Handle successful hiding of the record
- // For example, you could hide the corresponding row in the table
+ 
+ 
  const row = document.getElementById(`row-${rowId}`);
  row.style.display = 'none';
  },
  error: (jqXHR, textStatus, errorThrown) => {
- // Handle errors that occur during the hiding process
- // For example, you could display an error message to the user
  console.error(`Error hiding record: ${errorThrown}`);
  },
  });
@@ -200,18 +193,18 @@ hideButtons.forEach((button) => {
 </script>
 
 <script>
-  // Get the show button element
+  
 const showButton = document.getElementById('show-button');
 
-// Attach a click event listener to the show button
+
 showButton.addEventListener('click', () => {
- // Get all hidden rows
+ 
  const hiddenRows = document.querySelectorAll('.row-item');
 
- // Get the IDs of the hidden records
+ 
  const hiddenIds = Array.from(hiddenRows).map((row) => row.getAttribute('id').replace('row-', ''));
 
- // Send an AJAX request to the server to show the hidden records
+ 
  $.ajax({
  url: '{% url 'user:show_help_post' %}',
  method: 'POST',
@@ -221,16 +214,16 @@ showButton.addEventListener('click', () => {
  },
  success: (data) => {
   console.log('AJAX request succeeded');
- // Handle successful showing of the hidden records
- // For example, you could show each hidden row by setting its display property to an empty string
+ 
+ 
  hiddenRows.forEach((row) => {
   console.log(`Showing row: ${row.id}`);
   row.classList.remove('hidden-row');
  });
  },
  error: (jqXHR, textStatus, errorThrown) => {
- // Handle errors that occur during the showing process
- // For example, you could display an error message to the user
+ 
+ 
  console.error(`Error showing records: ${errorThrown}`);
  },
  });
@@ -240,23 +233,23 @@ showButton.addEventListener('click', () => {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-<!-- Add a script tag for your custom JavaScript code -->
+
 <script>
-  // Get the CSRF token from the page
+  
   const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
   
-  // Get the delete selected button element
+  
   const deleteSelectedButton = document.getElementById('delete-selected-button');
   
-  // Attach a click event listener to the delete selected button
+  
   deleteSelectedButton.addEventListener('click', () => {
-   // Get all the checkboxes that are checked
+   
    const selectedCheckboxes = document.querySelectorAll('input[name="selected_ids"]:checked');
   
-   // Get the IDs of the selected objects
+   
    const selectedIds = Array.from(selectedCheckboxes).map((checkbox) => checkbox.value);
   
-   // Send an AJAX request to the server to delete the selected objects
+   
    $.ajax({
    url: '{% url 'user:delete_help_post' %}',
    method: 'POST',
@@ -265,16 +258,15 @@ showButton.addEventListener('click', () => {
    selected_ids: selectedIds,
    },
    success: (data) => {
-   // Handle successful deletion of the selected objects
-   // For example, you could remove the corresponding rows from the table
+   
+   
    selectedIds.forEach((id) => {
    const row = document.getElementById(`row-${id}`);
    row.remove();
    });
    },
    error: (jqXHR, textStatus, errorThrown) => {
-   // Handle errors that occur during the deletion process
-   // For example, you could display an error message to the user
+   
    console.error(`Error deleting objects: ${errorThrown}`);
    },
    });
