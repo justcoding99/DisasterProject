@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% extends "./base.html" %}
+ {% block title %}
+    <title>Disaster Recovery Website Hospitals</title>
+    {% endblock %}
+
+{% block content %}
+
+
+
+
+
+<div class="row">
+
+          <div class="col-md-10">
+                <form id="locationForm" method="post" action="{% url 'user:nearby_hospitals' %}">
+                    {% csrf_token %}
+                    <input type="hidden" id="user_lat" name="user_lat">
+                    <input type="hidden" id="user_lon" name="user_lon">
+                    <button type="button" onclick="getLocation()" class="btn btn-secondary">Find nearby hospitals</button>
+                </form>
+            </div>
+</div>
+
+ <div class="mapsection">
+        <div class="row">
+            <div class="col">
+                <div id="map">
+                    {{ map_html|safe }}
+                </div>
+            </div>
+
+        </div>
+ </div>
+<div class="row">
+
+          <div class="col-md-12">
+              <p></p>
+
+          </div>
+</div>
+
+
+    <style>
+        .mapsection {
+            height: 500px;
+            padding: 20px;
+            padding-bottom: 20px;
+            margin-left: 20%;
+        }
+
+        #map {
+
+            width: 90%;
+            height: 90%;
+            margin-bottom: 20px;
+        }
+    </style>
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function showPosition(position) {
+        document.getElementById("user_lat").value = position.coords.latitude;
+        document.getElementById("user_lon").value = position.coords.longitude;
+        document.getElementById("locationForm").submit();
+    }
+</script>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+
+
+{% endblock %}
