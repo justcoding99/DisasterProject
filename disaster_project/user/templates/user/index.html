@@ -7,7 +7,6 @@
 
 {% block content %}
   <style>
-    /* Style the button */
     button {
       background-color: #4CAF50;
       border: none;
@@ -21,7 +20,6 @@
       cursor: pointer;
     }
 
-    /* Style the button when it is hovered over */
     button:hover {
       background-color: #3e8e41;
     }
@@ -33,18 +31,18 @@
   <script>
   const audioContext = new AudioContext();
 
-// When the button is clicked, generate a high-pitched tone
+
 document.getElementById("myButton").addEventListener("click", function() {
-  // Create a new sine wave oscillator
+  
   const oscillator = audioContext.createOscillator();
   oscillator.type = "sine";
-  oscillator.frequency.value = 2000; // Set the frequency to 2000 Hz (a high-pitched tone)
+  oscillator.frequency.value = 2000; 
 
-  // Connect the oscillator to the audio context and start it
+  
   oscillator.connect(audioContext.destination);
   oscillator.start();
 
-  // Stop the oscillator after 1 second
+  
   setTimeout(function() {
     oscillator.stop();
   }, 1000);
@@ -89,7 +87,7 @@ document.getElementById("myButton").addEventListener("click", function() {
     <p><strong>Emergency Phone Number:</strong> 911</p>
   </div>
 <div class="row">
-<!--    <div class="col-md-2"></div>-->
+
     <div class="col-md-12">
     <h1 style="text-align: center">What Do You Need?</h1>
     <a class="btn btn-primary helpbtn" href="/food_form" role="button">Food</a>
@@ -99,7 +97,7 @@ document.getElementById("myButton").addEventListener("click", function() {
     <a class="btn btn-primary helpbtn" href="/medical_form" role="button">Medical Supplies</a>
     <a class="btn btn-primary helpbtn" href="/hygiene_form" role="button">Hygiene Kits</a>
 </div>
-<!--     <div class="col-md-2"></div>-->
+
 </div>
   <script>
     function toggleEmergencyNumber() {
@@ -114,39 +112,7 @@ document.getElementById("myButton").addEventListener("click", function() {
 </body>
 
 <div class="container mt-5">
-
-
-
-
-<!--    <div class="content-section col-md-8 col-md-offset-2">-->
-<!--        <h2>Create A Help Post</h2>-->
-<!--        <form method="POST">-->
-<!--             {{ help_need_form|crispy }} {% csrf_token %}-->
-<!--            {{ form.as_p }}-->
-<!--&lt;!&ndash;            <input type="hidden" name="csrfmiddlewaretoken" value="Z9Ei8pREbpzzkP2UihkqObOpsRhX45FVRkUIoT8l44rjVSfMPe2OaJSIX1Z7QHHk">&ndash;&gt;-->
-
-
-<!--&lt;!&ndash;<div id="div_id_name" class="mb-3"> <label for="id_name" class="form-label requiredField">&ndash;&gt;-->
-<!--&lt;!&ndash;                Name<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_name"> </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;            <div id="div_id_description" class="mb-3"> <label for="id_description" class="form-label requiredField">&ndash;&gt;-->
-<!--&lt;!&ndash;                Description<span class="asteriskField">*</span> </label> <input type="text" name="name" class="textinput form-control" required id="id_description"> </div>&ndash;&gt;-->
-
-
-<!--&lt;!&ndash;            <div id="div_id_phone" class="mb-3"> <label for="id_phone" class="form-label requiredField">&ndash;&gt;-->
-<!--&lt;!&ndash;                Phone<span class="asteriskField">*</span> </label> <input type="text" name="phone" maxlength="30" class="textinput form-control" required id="id_phone"> </div> <div id="div_id_address" class="mb-3"> <label for="id_address" class="form-label">&ndash;&gt;-->
-<!--&lt;!&ndash;                Address&ndash;&gt;-->
-<!--&lt;!&ndash;            </label> <input type="text" name="address" class="textinput form-control" id="id_address"> </div> <input type="hidden" name="lat" value="0" id="id_lat"> <input type="hidden" name="lon" value="0" id="id_lon">&ndash;&gt;-->
-
-
-<!--            <div id="demo">-->
-<!--            </div>-->
-<!--            <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>-->
-
-
-<!--            <button class="btn btn-primary" type="submit" id="submit">Submit</button>-->
-
-<!--        </form>-->
+   
 
     </div>
     <script>
