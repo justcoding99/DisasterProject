@@ -1,0 +1,122 @@
+
+{% extends "user/base.html" %}
+{% load custom_tags %}
+
+{% block title %}
+    <title>ADMIN Hompage</title>
+{% endblock %}
+
+
+{% block content %}
+<style>
+.jumbotron.jumbotron-fluid{
+    text-align: center;
+    background: none;
+}
+.lead{
+    font-weight: 350;
+    display: inline-grid;
+    padding: 25px 30px 25px 30px;
+}
+.submitform{
+    margin: auto;
+    display: block;
+    padding: 10px;
+}
+    </style>
+<head>
+
+    <!-- style css -->
+    <link rel="stylesheet" type="text/css" href="/static/user/admin-css/style.css">
+    <!-- font css -->
+    <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tweaks for older IEs-->
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+
+{% load crispy_forms_tags %}
+<h5>// This is ADMIN Homepage</h5>
+    <div class="section1light">
+         <div class="row">
+            <div class="col-sm-12">
+                <div class="jumbotron jumbotron-fluid">
+                  <div class="container">
+                    
+                  </div>
+                </div>
+            </div>
+        </div>
+   </div>
+
+
+   <div class="container">
+    <div class="box_section">
+       <div class="online_box">
+          <div class="online_box_left">
+             <a href="/userslist"><div class="online_box_main">
+                <div class="box_left">
+                   <div class="right_arrow"><i class="fa fa-arrow-right"></i></div>
+                </div>
+                <div class="box_right">
+                   <p class="book_text">View</p>
+                   <h4 class="appoinment_text">User List</h4>
+                </div>
+             </div></a>
+          </div>
+          <div class="online_box_left">
+             <a href="/manage_help_post"><div class="online_box_main">
+                <div class="box_left">
+                   <div class="right_arrow"><i class="fa fa-arrow-right"></i></div>
+                </div>
+                <div class="box_right">
+                   <p class="book_text">Manage</p>
+                   <h4 class="appoinment_text">Help Post</h4>
+                </div>
+             </div></a>
+          </div>
+          <div class="online_box_left">
+            <a href="/statistics"><div class="online_box_main">
+               <div class="box_left">
+                  <div class="right_arrow"><i class="fa fa-arrow-right"></i></div>
+               </div>
+               <div class="box_right">
+                  <p class="book_text">Manage</p>
+                  <h4 class="appoinment_text">Statistics</h4>
+               </div>
+            </div></a>
+         </div>
+       </div>
+    </div>
+ </div>
+
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+       <div class="list-group">
+         {% for need in needs %}
+          <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1"> {{ need.name }} </h5>
+              <small>{{ need.created_at | prettydate }}</small>
+            </div>
+            <p class="mb-1">{{ need.phone }}</p>
+            <p class="mb-1">{{ need.description }}</p>
+            <small> {{ need.address }}</small>
+          </a>
+                 {% endfor %}
+        </div>
+
+    </div>
+    <div class="col-md-3">
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+{% endblock %}

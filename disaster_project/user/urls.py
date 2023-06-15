@@ -8,7 +8,6 @@ urlpatterns = [
     path('', views.request_help_view, name='index'),
     path('login', views.login_view, name='login'),
     path('help_need', views.help_need_view, name='help_need'),
-    path('help_need_list', views.help_need_list, name='help_need_list'),
     path('help_map', views.help_map, name='help_map'),
     path('volunteer', views.volunteer_view, name='volunteer'),
     path('register', views.register_view, name='register'),
@@ -16,6 +15,8 @@ urlpatterns = [
     path("activate/<str:uidb64>/<str:token>", views.activate, name='activate'),
     path('first_aid', views.firstaid_view, name='first_aid'),
     path('profile', views.profile_view, name='profile'),
+    path('admin', views.admin_view, name='admin'),
+    path('userslist', views.userslist_view, name='userslist'),
     path('food_form', views.food_form_view, name='food_form'),
     path('shelter_form', views.shelter_form_view, name='shelter_form'),
     path('medical_form', views.medical_form_view, name='medical_form'),
@@ -32,5 +33,10 @@ urlpatterns = [
     path('about_us', views.aboutus_view, name='about_us'),
     path('hospitals', views.hospital_locations_view, name='hospitals'),
     path('nearby-hospitals', views.nearby_hospitals, name='nearby_hospitals'),
+    path('statistics', views.statistics_view, name='statistics'),
+    path('manage_help_post/', views.manage_help_post_view, name='manage_help_post'),
+    path('delete_help_post/', views.delete_help_post_view, name='delete_help_post'),
+    path('hide_help_post/', views.hide_help_post_view, name='hide_help_post'),
+    path('show_help_post/', views.show_help_post_view, name='show_help_post'),
 
 ]
