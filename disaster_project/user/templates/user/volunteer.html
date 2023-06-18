@@ -83,7 +83,7 @@ td {
 .progress-bar {
   height: 100%;
   background-color: #286090;;
-  width: 100%; 
+  width: 100%; /* Set initial width to 100% */
   position: relative;
 }
 
@@ -94,13 +94,14 @@ td {
   <div class="row">
     <div class="col-md-12">
       <p class="lead 1" style="text-align:left">Request List</p>
-
+<!--      <a class="btn btn-primary" style="float: right;" role="button" href="/helped_archive">View Helped Archive</a>-->
 
       <table>
         <tr>
           <th>ID</th>
           <th>First Name</th>
           <th>Last Name</th>
+          <th>User Type</th>
           <th>Address</th>
           <th>Help Class</th>
           <th>Quantity</th>
@@ -108,11 +109,11 @@ td {
           <th>Action</th>
         </tr>
         {% for need in needs %}
-          {% if not need.hidden %}
         <tr id="hiderow">
           <td>{{ need.id }}</td>
           <td>{{ need.first_name }}</td>
           <td>{{ need.last_name }}</td>
+          <td>{{ need.user_type }}</td>
           <td>{{ need.address }}</td>
           <td>{{ need.help_class }}</td>
           <td id="quantity_{{ need.id }}">{{ need.quantity }}</td>
@@ -134,7 +135,6 @@ td {
             </form>
           </td>
         </tr>
-        {% endif %}
         {% endfor %}
       </table>
     </div>
@@ -151,7 +151,7 @@ td {
     progressBar.style.width = progress + '%';
   }
 
-  
+  // Attach event listeners to input elements
   var quantityInputs = document.querySelectorAll('[id^="id_quantity_"]');
   quantityInputs.forEach(function(input) {
     var itemId = input.getAttribute('data-item-id');
@@ -160,7 +160,7 @@ td {
     });
   });
 
-  
+  // Initial update of the progress bars
   {% for need in needs %}
   updateProgressBar('{{ need.id }}');
   {% endfor %}
@@ -216,8 +216,8 @@ function validateQuantity(maxQuantity) {
     if (enteredQuantity > maxQuantity) {
         var errorMessage = "Value should be less than " + maxQuantity + ".";
         quantityInput.setCustomValidity(errorMessage);
-        quantityInput.reportValidity(); 
-        return false; 
+        quantityInput.reportValidity(); // Display the custom error message
+        return false; // Prevent form submission
     }
 
     // Clear the custom error message

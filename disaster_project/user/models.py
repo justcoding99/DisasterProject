@@ -10,13 +10,13 @@ import uuid
 
 
 class User(AbstractUser):
-    extra = models.CharField(max_length=30, blank=True)
+    
     phone = models.CharField(max_length=10, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
 
 
 Help_Class = (
-    ('food','Food'),
+    ('food','Food'), 
     ('shelter','Shelter'),
     ('heating','Heating'),
     ('clothes','Clothes'),
@@ -36,7 +36,7 @@ class HelpNeed(models.Model):
     address = models.TextField(null=True, blank=False)
     lat = models.CharField(max_length=255, default='0')
     lon = models.CharField(max_length=255, default='0')
-    description = models.CharField(max_length=255, blank=False, null=True)
+    
 
     is_helped = models.BooleanField(default=False)
     helpers = models.ManyToManyField(User, through='HelpNeedHelper')
@@ -66,22 +66,6 @@ class HelpNeed(models.Model):
 
 
 
-Volunteer_Field = (
-    ('food','Provide Food'),
-    ('transportation', 'Provide Transportation'),
-    ('shelter','Provide Shelter'),
-)
-class Volunteer(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=30)
-    address = models.CharField(max_length=255)
-    volunteer_field = models.CharField(max_length=15, choices=Volunteer_Field)
-
-    def __str__(self):
-        return self.first_name + " " + self.last_name
-
-
 clothes_category = (
     ('overalls','Overalls'),
     ('tops','Tops'),
@@ -109,14 +93,15 @@ class ClothesRequest(HelpNeed):
 class HelpNeedHelper(models.Model):
     help_need = models.ForeignKey(HelpNeed, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=0)
+    quantity = models.PositiveIntegerField(default=0) 
+    """quantity provided by volunteer"""
 
     def __str__(self):
         return f"{self.user.username} - {self.help_need}"
 
     class Meta:
         unique_together = ('help_need', 'user')
-
+        """unique helpneed id and user pk together"""
 
 
 class Hospitals(models.Model):

@@ -36,16 +36,11 @@
     </style>
 <h1>Request Clothes Form</h1>
 <form method="POST" action="">
+      <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
      {{ ready_form|crispy }} {% csrf_token %}
         {{ form.as_p }}
-        <button type="button" onclick="getLocation()" class="btn btn-secondary">Locate me</button>
-        <button class="btn btn-primary updatebtn" type="submit">Submit</button>
+         <button class="btn btn-primary updatebtn" type="submit">Submit</button>
 </form>
-
-
-
-
-
 
 
 
@@ -54,6 +49,7 @@
         function getLocation() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition);
+                
             }
         }
 

@@ -25,14 +25,9 @@
     }
   </style>
   <button id="myButton">Click me for a high-pitched sound!</button>
-
-
-
   <script>
   const audioContext = new AudioContext();
-
-
-document.getElementById("myButton").addEventListener("click", function() {
+  document.getElementById("myButton").addEventListener("click", function() {
   
   const oscillator = audioContext.createOscillator();
   oscillator.type = "sine";

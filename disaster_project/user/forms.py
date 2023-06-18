@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model
 
-from .models import HelpNeed, Volunteer, ClothesRequest
+from .models import HelpNeed, ClothesRequest
 
 User = get_user_model()
 
@@ -30,25 +30,10 @@ class HelpNeedForm(forms.ModelForm):
 
     class Meta:
         model = HelpNeed
-        fields = ("first_name","last_name", "phone", "address", "lat", "lon", "description")
+        fields = ("first_name","last_name", "phone", "address", "lat", "lon")
 
 
 
-class VolunteerForm(forms.ModelForm):
-    first_name = forms.CharField(required=True)
-    last_name = forms.CharField(required=True)
-
-    class Meta:
-        model = Volunteer
-        fields = ("first_name","last_name", "phone", "address")
-
-# class ProfileForm(VolunteerForm):
-#     class Meta:
-#         model = Volunteer
-#         fields = ('username','email') + VolunteerForm.Meta.fields
-#     def __init__(self, *args, **kwargs):
-#         super(ProfileForm, self).__init__(*args, **kwargs)
-#         self.fields.pop('volunteer_field')
 
 class ReadyForm(forms.ModelForm):
     lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
@@ -74,17 +59,17 @@ class ClothesRequestForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     username = forms.CharField(required=False, disabled=True)
     email = forms.CharField(required=False, disabled=True)
+    date_joined = forms.CharField(required=False, disabled=True)
+    lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
+    address = forms.CharField(required=True)
     class Meta:
         model = User
-        fields = ('first_name','last_name', 'username', 'email', 'phone', 'address')
+        fields = ('first_name','last_name', 'username', 'email', 'phone', 'address','date_joined')
         help_texts = {
             'username': None,
         }
-        # def __init__(self, *args, **kwargs):
-        #     super(ProfileForm, self).__init__(*args, **kwargs)
-        #     self.fields['username'].disabled = True
-        #     self.fields['email'].disabled = True
-
+        
 class VolunteerRequestForm(forms.ModelForm):
     first_name = forms.CharField(widget=forms.HiddenInput())
     last_name = forms.CharField(widget=forms.HiddenInput())
@@ -124,8 +109,5 @@ class VolunteerClothesRequestForm(forms.ModelForm):
             'volunteer': forms.HiddenInput(),
         }
 
-class QuantityForm(forms.ModelForm):
-    class Meta:
-        model = HelpNeed
-        fields = ("quantity",)
+
 

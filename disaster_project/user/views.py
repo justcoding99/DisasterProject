@@ -6,29 +6,24 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
-# Create your views here.
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.template import loader
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
-
-from .models import HelpNeed, Volunteer, HelpNeedHelper, Hospitals
-
-from .models import HelpNeed, Volunteer, HelpNeedHelper, User
+from .models import HelpNeed,  HelpNeedHelper, Hospitals
+from .models import HelpNeed, HelpNeedHelper, User
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.contrib.auth import get_user_model
-from .forms import NewUserForm, HelpNeedForm, VolunteerForm, ProfileForm, ReadyForm, \
-    VolunteerRequestForm, ClothesRequestForm, VolunteerClothesRequestForm, QuantityForm
+from .forms import NewUserForm, HelpNeedForm, ProfileForm, ReadyForm, \
+    VolunteerRequestForm, ClothesRequestForm, VolunteerClothesRequestForm
 from django.http import JsonResponse
 from pymongo import MongoClient
 from django.core.paginator import Paginator
-
 import folium
 from folium.plugins import FastMarkerCluster
 from math import radians, sin, cos, sqrt, atan2
-
 import logging
 import uuid
 from django.db.models import Max, Min
@@ -84,13 +79,11 @@ def register_view(request):
     if request.method == 'POST':
         form = NewUserForm(request.POST)
         if form.is_valid():
-            # save form in the memory not in database
             user = form.save(commit=False)
             if settings.DEVELOPMENT != 'True':
                 user.is_active = False
             user.save()
 
-            # to get the domain of the current site
             current_site = get_current_site(request)
             mail_subject = 'Activation link has been sent to your email id'
             message = render_to_string('user/acc_active_email.html', {
@@ -144,7 +137,7 @@ def help_need_view(request):
 
 def help_map(request):
     needs = HelpNeed.objects.all()
-    map = folium.Map()
+    map = folium.Map(location=[38.9637, 35.2433], zoom_start=6)
     marker_cluster = FastMarkerCluster(
         data=list(
             zip([need.lat for need in needs], [need.lon for need in needs])))
@@ -169,31 +162,11 @@ def help_need_list(request):
 
 def volunteer_view(request):
     needs = HelpNeed.objects.filter(quantity__gt=0).order_by('-created_at').exclude(volunteer=request.user)
-    """
-    client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
-    db = client['djongo']
-    collection = db['user_helpneed']
-    needs2 = collection.find({'hidden': False})
-    """
     paginator = Paginator(needs, 10) # Change 10 to the number of items you want per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    form = VolunteerForm(request.POST or None)
-    quantityForm = QuantityForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            first_name = request.POST['first_name']
-            last_name = request.POST['last_name']
-            phone = request.POST['phone']
-            address = request.POST['address']
-            volunteer_field = request.POST['volunteer_field']
-            vol = Volunteer.objects.create(first_name=first_name, last_name=last_name, phone=phone, address=address,
-                                           volunteer_field=volunteer_field)
-            messages.success(request, 'Data has been submitted')
-            form.save()
-        else:
-            print(form.errors)
-    return render(request=request, template_name="user/volunteer.html", context={"volunteer_form": form, "needs": page_obj, "quantityForm": quantityForm})
+    return render(request=request, template_name="user/volunteer.html", context={"needs": page_obj})
+
 def firstaid_view(request):
     return render(request=request, template_name="user/firstaid.html")
 
@@ -208,17 +181,12 @@ def profile_view(request):
 
 
 
-
+@login_required
 def admin_view(request):
      return render(request=request, template_name="user/admin.html")
 
 
-
-
-
-
-
-
+@login_required
 def userslist_view(request):
     users = User.objects.all()
     paginator = Paginator(users, 10) # Show 10 users per page.
@@ -247,6 +215,7 @@ def food_form_view(request):
                 return redirect("user:food_form")
         else:
             form = ReadyForm(request.POST or None,initial={'help_class': "food", 'user_type':"victim"})
+
         return render(request=request, template_name="user/food_form.html", context={"ready_form":form})
 def shelter_form_view(request):
     if request.user.is_authenticated:
@@ -292,6 +261,28 @@ def medical_form_view(request):
             form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type':"victim"})
         return render(request=request, template_name="user/medical_form.html", context={"ready_form":form})
 
+def ornek_form_view(request):
+    if request.user.is_authenticated:
+        form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                messages.info(request, f"Volunteer, Your help request has been received.")
+                form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
+        else:
+            form = VolunteerRequestForm(request.POST or None, initial={'help_class': "medical_supplies", 'user_type': "volunteer", 'volunteer': request.user})
+        return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
+    else:
+        form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type': "victim"})
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                messages.info(request, f"Your help request has been received.")
+                return redirect("user:medical_form")
+        else:
+            form = ReadyForm(request.POST or None,initial={'help_class': "medical_supplies", 'user_type':"victim"})
+        return render(request=request, template_name="user/medical_form.html", context={"ready_form":form})
+    
 def hygiene_form_view(request):
     if request.user.is_authenticated:
         form = VolunteerRequestForm(request.POST or None, initial={'help_class': "hygiene", 'user_type': "volunteer", 'volunteer': request.user})
@@ -360,26 +351,7 @@ def heaters_form_view(request):
 
 def request_help_view(request):
     return render(request=request, template_name="user/index.html")
-def volunteer_requests(request):
-    form = VolunteerRequestForm(request.POST or None, initial={'user_type':"volunteer", 'volunteer': request.user})
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-            messages.info(request, f"Volunteer, Your help request has been received.")
-            return redirect("user:volunteer_requests")
-    else:
-        form = VolunteerRequestForm(request.POST or None, initial={'user_type': "volunteer"})
-    return render(request=request, template_name="user/volunteer_requests.html")
 
-@login_required
-def change_status(request, pk):
-    instance = get_object_or_404(HelpNeed, pk=pk)
-    instance.quantity = 0
-    instance.is_helped = True
-    instance.helper_id = request.user
-    instance.save()
-    messages.info(request, f"Volunteer, Thank You For Your Help")
-    return redirect('user:volunteer')
 
 @login_required
 def update_quantity(request, pk):
@@ -391,8 +363,6 @@ def update_quantity(request, pk):
         post.quantity = quantity_change
         post.helpers.add(request.user)
         post.save()
-
-        # Update the quantity for the current user in the through model
         helper = HelpNeedHelper.objects.get(help_need=post, user=request.user)
         helper.quantity += newquantity
         helper.save()
@@ -406,42 +376,26 @@ def update_quantity(request, pk):
         messages.info(request, "Volunteer, Thank You For Your Help")
         return redirect('user:volunteer')
 
-# def helped_archive(request):
-#     client = MongoClient('mongodb://localhost:27017')
-#     db = client['djongo']
-#     collection = db['user_helpneed']
-#     query = {"is_helped": True}
-#     posts = collection.find(query)
-#     client.close()
-#     context = {
-#         'posts': posts
-#     }
-#     return render(request, 'user/helped_archive.html', context)
-
+"""my support page """
 @login_required
 def helped_archive(request):
     posts = HelpNeedHelper.objects.filter(
         user=request.user
     ).order_by('-help_need__updated_at')
+    """last time helped """
 
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
-    context = {
-        'posts': page_obj
-    }
-    return render(request, 'user/helped_archive.html', context)
+    return render(request, 'user/helped_archive.html', context={"posts": page_obj})
 
 def my_requests(request):
     posts = HelpNeed.objects.filter(volunteer= request.user).order_by('-created_at')
     paginator = Paginator(posts, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {
-        'posts': page_obj
-    }
-    return render(request, 'user/my_requests.html', context)
+    
+    return render(request, 'user/my_requests.html', context={"posts": page_obj})
 
 def delete_request(request, pk):
     instance = get_object_or_404(HelpNeed, pk=pk)
@@ -457,26 +411,7 @@ def aboutus_view(request):
 def hospital_locations_view(request):
 
     hospitals = Hospitals.objects.all()
-
-    # Create a map object centered on Turkey
     map = folium.Map(location=[38.9637, 35.2433], zoom_start=6)
-
-    # FastMarkerCluster(list(
-    #     zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals]))).add_to(
-    #     map)
-    # Add markers to the map
-    # for hospital in hospitals:
-    #     latitude = float(hospital.lat)
-    #     longitude = float(hospital.lon)
-    #
-    #     # Check if both latitude and longitude are valid
-    #     if latitude is not None and longitude is not None and isinstance(latitude, float) and isinstance(longitude,
-    #                                                                                                      float):
-    #         folium.Marker(
-    #             location=[latitude, longitude],
-    #             popup=hospital.name
-    #         ).add_to(map)
-
     marker_cluster = FastMarkerCluster(
         data=list(zip([hospital.lat for hospital in hospitals], [hospital.lon for hospital in hospitals])))
 
@@ -493,7 +428,7 @@ def hospital_locations_view(request):
 
 def calculate_distance(lat1, lon1, lat2, lon2):
     # Haversine formula
-    R = 6371  # earth radius
+    R = 6371
     lat1_rad, lon1_rad = radians(lat1), radians(lon1)
     lat2_rad, lon2_rad = radians(lat2), radians(lon2)
     dlat = lat2_rad - lat1_rad
@@ -512,7 +447,7 @@ def nearby_hospitals(request):
     if request.method != "POST":
         return HttpResponse("No user location data available.")
 
-    threshold_distance = 1800  # kilometers
+    threshold_distance = 15  # kilometers
 
 
     hospitals = Hospitals.objects.all()
@@ -524,15 +459,7 @@ def nearby_hospitals(request):
             nearby_hospitals.append(hospital)
 
     map = folium.Map(location=[user_lat, user_lon], zoom_start=12)
-    # FastMarkerCluster(list(
-    #     zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals]))).add_to(
-    #     map)
-
-    # for hospital in nearby_hospitals:
-    #     folium.Marker(
-    #         location=[hospital.lat, hospital.lon],
-    #         popup=hospital.name
-    #     ).add_to(map)
+  
     marker_cluster = FastMarkerCluster(
         data=list(zip([hospital.lat for hospital in nearby_hospitals], [hospital.lon for hospital in nearby_hospitals])))
 
@@ -548,14 +475,12 @@ def nearby_hospitals(request):
     context = {'map_html': map_hospitals}
     return render(request, 'user/hospitals.html', context)
 
-def statistics_view(request):
 
 
 
-logger = logging.getLogger(__name__)
 
 
-
+@login_required
 def manage_help_post_view(request):
     needs = HelpNeed.objects.all()
     paginator = Paginator(needs, 10) # Show 10 help needs per page.
@@ -565,21 +490,7 @@ def manage_help_post_view(request):
     return render(request, "user/manage_help_post.html", context)
 
 
-
-
-
-logger = logging.getLogger(__name__)
-
-
-    
-
-
-
-
-
-
-
-
+@login_required
 def delete_help_post_view(request):
     if request.method == 'POST':
         selected_ids = request.POST.getlist('selected_ids[]')
@@ -588,60 +499,39 @@ def delete_help_post_view(request):
             client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
             db = client['djongo']
             collection = db['user_helpneed']
-            # Delete the selected objects using their helpneedid values
             filter = {'helpneedid': {'$in': [uuid.UUID(id_) for id_ in selected_ids]}}
             print(f'Delete filter: {filter}')
             result = collection.delete_many(filter)
             print(f'Deleted count: {result.deleted_count}')
             if result.deleted_count > 0:
-                # Return a JSON response indicating success
                 return JsonResponse({'status': 'success'})
             else:
-                # Handle case when the documents were not found or not deleted
-                # Return a JSON response indicating failure
                 return JsonResponse({'status': 'failure'})
         except Exception as e:
-            # Handle any exceptions that occur during the deletion process
-            # Return a JSON response indicating failure
+            
             return JsonResponse({'status': 'failure'})
     else:
-        # Handle GET requests or requests that are not made via AJAX
         return redirect('user:manage_help_post')
 
-
-
-
-
-    """"
-    return HttpResponse('Error deleting the document') 
-    """
-
+@login_required
 def hide_help_post_view(request):
     if request.method == 'POST':
-        # Get the ID of the record to hide from the POST data
         helpneedid = request.POST.get('helpneedid')
         try:
             client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
             db = client['djongo']
             collection = db['user_helpneed']
-            # Get the HelpNeed object with the specified ID
             help_need = HelpNeed.objects.get(helpneedid=helpneedid)
-            # Set the hidden field to True
             help_need.hidden = True
-            # Save the changes to the database
             help_need.save()
-            # Return a JSON response indicating success
             return JsonResponse({'status': 'success'})
         except HelpNeed.DoesNotExist:
-            # Handle case when the HelpNeed object with the specified ID does not exist
-            # Return a JSON response indicating failure
             return JsonResponse({'status': 'failure'})
     else:
-        # Handle GET requests or requests that are not made via AJAX
         return redirect('user:manage_help_post')
     
 
-
+@login_required
 def show_help_post_view(request):
     print('show_help_post_view called')
     if request.method == 'POST':
@@ -651,20 +541,14 @@ def show_help_post_view(request):
             client = MongoClient('mongodb://root:example@localhost:27017/?authMechanism=DEFAULT')
             db = client['djongo']
             collection = db['user_helpneed']
-            # Get the HelpNeed objects with the specified IDs
             help_needs = HelpNeed.objects.filter(helpneedid__in=helpneedids)
             print(f'HelpNeeds: {help_needs}')
-            # Set the hidden field to False for all objects
             result = help_needs.update(hidden=False)
             print(f'Update result: {result}')
-            # Return a JSON response indicating success
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            # Handle any exceptions that occur during the showing process
-            # Return a JSON response indicating failure
             return JsonResponse({'status': 'failure'})
     else:
-        # Handle GET requests or requests that are not made via AJAX
         return redirect('user:manage_help_post')
 
 
@@ -672,18 +556,26 @@ def show_help_post_view(request):
    
 
 
-
+@login_required
 def statistics_view(request):
     top_users = HelpNeedHelper.objects.values('user__username').annotate(max_quantity=Max('quantity')).order_by('-max_quantity')[:20]
     least_users = HelpNeedHelper.objects.values('user__username').annotate(min_quantity=Min('quantity')).order_by('min_quantity')[:20]
+    food_requests = HelpNeed.objects.filter(help_class='food').count()
     shelter_requests = HelpNeed.objects.filter(help_class='shelter').count()
+    heating_requests = HelpNeed.objects.filter(help_class='heating').count()
     clothes_requests = HelpNeed.objects.filter(help_class='clothes').count()
+    medical_supplies_requests = HelpNeed.objects.filter(help_class='medical_supplies').count()
+    hygiene_requests = HelpNeed.objects.filter(help_class='hygiene').count()
+    
 
     context = {
         'top_users': top_users,
         'least_users': least_users,
+        'food_requests': food_requests,
         'shelter_requests': shelter_requests,
+        'heating_requests': heating_requests,
         'clothes_requests': clothes_requests,
+        'medical_supplies_requests': medical_supplies_requests,
     }
     return render(request, 'user/statistics.html', context)
 
