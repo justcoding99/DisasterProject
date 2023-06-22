@@ -57,15 +57,17 @@ class ClothesRequestForm(forms.ModelForm):
         fields = ("first_name","last_name", "phone", "address","lat", "lon", "quantity", "help_class", "user_type", "category", "size")
 
 class ProfileForm(forms.ModelForm):
+    last_name = forms.CharField(required=False, disabled=True)                         
     username = forms.CharField(required=False, disabled=True)
     email = forms.CharField(required=False, disabled=True)
     date_joined = forms.CharField(required=False, disabled=True)
+    phone =  forms.IntegerField (required=False)
     lat = forms.CharField(widget=forms.HiddenInput(), initial='0')
     lon = forms.CharField(widget=forms.HiddenInput(), initial='0')
     address = forms.CharField(required=True)
     class Meta:
         model = User
-        fields = ('first_name','last_name', 'username', 'email', 'phone', 'address','date_joined')
+        fields = ('first_name','last_name','username', 'email', 'phone', 'address','date_joined')
         help_texts = {
             'username': None,
         }

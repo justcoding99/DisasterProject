@@ -31,8 +31,8 @@
     padding: 10px;
 }
 .btnclass {
-<!--  height: 200px;-->
-<!--  width: 200px;-->
+ /* height: 200px; */
+  /* width: 200px; */
   background-color: yellowgreen;
   position: relative;
 }
@@ -98,7 +98,7 @@ td {
 
       <table>
         <tr>
-          <th>ID</th>
+          
           <th>First Name</th>
           <th>Last Name</th>
           <th>User Type</th>
@@ -110,7 +110,7 @@ td {
         </tr>
         {% for need in needs %}
         <tr id="hiderow">
-          <td>{{ need.id }}</td>
+          
           <td>{{ need.first_name }}</td>
           <td>{{ need.last_name }}</td>
           <td>{{ need.user_type }}</td>
@@ -160,10 +160,10 @@ td {
     });
   });
 
-  // Initial update of the progress bars
-  {% for need in needs %}
-  updateProgressBar('{{ need.id }}');
-  {% endfor %}
+    // Initial update of the progress bars
+    {% for need in needs %}
+    updateProgressBar('{{ need.id }}');
+    {% endfor %}
   {% endfor %}
 </script>
 

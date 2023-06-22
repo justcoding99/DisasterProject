@@ -64,7 +64,7 @@ td {
 
           <tr>
 
-              <th>ID</th>
+              
 
               <th>Address</th>
 
@@ -84,7 +84,7 @@ td {
 
               <tr id="hiderow">
 
-                  <td>{{ post.id }}</td>
+                  
 
                   <td>{{ post.address }}</td>
 
@@ -133,6 +133,7 @@ td {
                       {% if post.quantity < post.original_quantity %}
 
                              This request has been Partially/Fully helped, You cannot delete this request!
+                      
                       {% else %}
                             <a class="btn btn-danger" href="{% url 'user:delete_request' pk=post.pk  %}" role="button">Delete </a>
                       {% endif %}

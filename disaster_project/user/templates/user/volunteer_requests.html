@@ -42,12 +42,9 @@
       background-color: #3e8e41;
     }
     </style>
-<h1>Request Help</h1>
-
-<h1>
+<h1>Request Help - {{title}} </h1>
 
 
-</h1>
 
         <form method="POST" class="myform" action="">
              {{ help_need_form|crispy }} {% csrf_token %}

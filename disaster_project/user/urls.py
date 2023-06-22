@@ -10,6 +10,7 @@ urlpatterns = [
     path('help_need', views.help_need_view, name='help_need'),
     path('help_map', views.help_map, name='help_map'),
     path('volunteer', views.volunteer_view, name='volunteer'),
+    
     path('register', views.register_view, name='register'),
     path("logout", views.logout_view, name="logout"),
     path("activate/<str:uidb64>/<str:token>", views.activate, name='activate'),

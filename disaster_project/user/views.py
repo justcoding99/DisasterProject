@@ -120,8 +120,7 @@ def activate(request, uidb64, token):
                       {'msg': 'Thank you for your email confirmation. Now you can login your account.'})
     else:
         return render(request, 'user/Email.html', {'msg': 'Activation link is invalid!'})
-
-
+"""index"""
 def help_need_view(request):
     if request.method == "POST":
         form = HelpNeedForm(request.POST)
@@ -133,7 +132,6 @@ def help_need_view(request):
             messages.error(request, "Name and phone are mandatory.")
     form = HelpNeedForm()
     return render(request=request, template_name="user/index.html", context={"help_need_form": form})
-
 
 def help_map(request):
     needs = HelpNeed.objects.all()
@@ -337,7 +335,7 @@ def heaters_form_view(request):
                 form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer", 'volunteer': request.user})
         else:
             form = VolunteerRequestForm(request.POST or None, initial={'help_class': "heating", 'user_type': "volunteer", 'volunteer': request.user})
-        return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form})
+        return render(request=request, template_name="user/volunteer_requests.html", context={"help_need_form": form,"title": "heater"})
     else:
         form = ReadyForm(request.POST or None, initial={'help_class': "heating", 'user_type': "victim"})
         if request.method == 'POST':
